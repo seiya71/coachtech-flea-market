@@ -1,0 +1,269 @@
+main {
+    display: grid;
+    grid-template-rows: 300px 200px 200px;
+    grid-template-columns: 2fr 1fr;
+    margin: 50px;
+}
+
+.item-container {
+    grid-column: 1/2;
+    grid-row: 1/2;
+    gap: 20px;
+    display: flex;
+    justify-content: flex-start;
+    align-items: center;
+    border-bottom: 1px solid #000;
+    margin: 20px;
+}
+
+.item-image {
+    width: 180px;
+    height: 180px;
+    background-color: lightgray;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 14px;
+}
+
+.item-data {
+    height: 180px;
+}
+
+.item-title {
+    font-size: 36px;
+    margin-bottom: 10px;
+}
+
+.price-symbol {
+    font-size: 20px;
+    color: #333;
+}
+
+.price-amount {
+    font-size: 36px;
+    color: #333;
+}
+
+.payment {
+    grid-column: 1/2;
+    grid-row: 2/3;
+    border-bottom: 1px solid #000;
+    margin: 20px;
+}
+
+.payment-method {
+    margin: 0px 0px 0px 30px;
+    font-size: 20px;
+    font-weight: bold;
+}
+
+.payment-method__select {
+    margin: 40px 100px;
+    width: 265px;
+    height: 32px;
+    font-size: 20px;
+}
+
+select {
+    width: 100%;
+    height: 100%;
+}
+
+.shipping-info {
+    grid-column: 1/2;
+    grid-row: 3/4;
+    display: flex;
+    flex-wrap: wrap;
+    border-bottom: 1px solid #000;
+    margin: 0px 20px;
+}
+
+.address-title {
+    flex: 1 1 45%;
+    font-size: 20px;
+    font-weight: bold;
+    margin: 0px 0px 20px 30px;
+}
+
+.address-edit__link {
+    flex: 1 1 45%;
+    display: flex;
+    justify-content: flex-end;
+    font-size: 20px;
+    margin: 0px 30px 20px 0px;
+    text-decoration: none;
+    background: none;
+    border: none;
+    color: blue;
+    cursor: pointer;
+}
+
+.address-edit__link:hover {
+    text-decoration: underline;
+}
+
+.address-data {
+    flex: 1 1 100%;
+    font-size: 20px;
+    margin: 40px 100px;
+}
+
+.summary-container {
+    grid-column: 2/3;
+    grid-row: 1/3;
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between;
+    margin: 20px;
+    width: 440px;
+    height: 350px;
+}
+
+.summary-table {
+    width: 440px;
+    height: 230px;
+    border: 1px solid black;
+    border-collapse: collapse;
+}
+
+.summary-table__row {
+    width: 435px;
+    height: 110px;
+    border: 1px solid black;
+    font-size: 20px;
+}
+
+.summary-table__description {
+    width: 215px;
+    height: 110px;
+    text-align: center;
+    vertical-align: middle;
+    font-size: 20px;
+}
+
+.purchase-btn {
+    text-align: center;
+    width: 100%;
+    padding: 10px;
+    background-color: #ff5757;
+    color: white;
+    cursor: pointer;
+    font-size: 20px;
+    border-radius: 5px;
+    border: none;
+}
+
+.purchase-btn:hover {
+    background-color: #e14b4b;
+}
+
+@media screen and (max-width: 768px) {
+    body {
+        max-width: 768px;
+        min-width: 700px;
+    }
+
+    main {
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+    }
+
+    .item-container {
+        width: 100%;
+    }
+
+    .payment {
+        width: 100%;
+    }
+
+    .shipping-info {
+        width: 100%;
+    }
+}
+
+@media screen and (max-width: 480px) {
+    body {
+        max-width: 480px;
+        min-width: 350px;
+    }
+
+    main {
+        width: 100%;
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        margin: 10px 0px;
+    }
+
+    .item-container {
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        width: 100%;
+        margin: 0px;
+    }
+
+    .item-data {
+        height: auto;
+    }
+
+    .item-title {
+        font-size: 24px;
+    }
+
+    .payment {
+        width: 100%;
+        margin: 0px;
+    }
+
+    .payment-method__select {
+        margin: 40px 50px;
+    }
+
+    .shipping-info {
+        width: 100%;
+        margin: 0px;
+    }
+
+    .summary-container {
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        width: 300px;
+    }
+
+    .summary-table {
+        width: 300px;
+        height: 160px;
+    }
+
+    .summary-table tbody tr {
+        width: 300px;
+        height: 80px;
+    }
+
+    .summary-table tbody td {
+        width: 150px;
+        height: 80px;
+    }
+
+    .purchase-btn {
+        width: 300px;
+    }
+
+    .address-title {
+        margin: 0px 0px 0px 20px;
+        flex: 1 1 40%;
+    }
+
+    .address-edit__link {
+        margin: 0px 20px 0px 0px;
+        flex: 1 1 40%;
+    }
+
+    .address-data {
+        margin: 10px;
+    }
+}

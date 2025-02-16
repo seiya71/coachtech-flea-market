@@ -1,0 +1,154 @@
+main {
+    margin: auto;
+}
+
+.tab-menu {
+    display: flex;
+    border-bottom: 1px solid black;
+    width: 100%;
+    margin: 20px 0px;
+    padding: 0px 200px;
+}
+
+.tab {
+    display: flex;
+    justify-content: start;
+    width: 150px;
+    height: 40px;
+    color: black;
+    align-items: flex-end;
+}
+
+
+.tab-text {
+    color: black;
+    text-decoration: none;
+    font-weight: bold;
+}
+
+.tab-text.active {
+    color: red !important;
+}
+
+.item-box {
+    display: flex;
+    flex-direction: column;
+}
+
+.item-list {
+    display: flex;
+    justify-content: center;
+    align-items: flex-start;
+    padding: 30px;
+    margin-bottom: 20px;
+    flex-wrap: wrap;
+}
+
+.item {
+    text-align: center;
+    margin: 40px;
+    flex: 0 0 auto;
+    box-sizing: border-box;
+}
+
+.item-image {
+    width: 290px;
+    height: 290px;
+    background-color: #ccc;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    font-size: 0.5rem;
+    margin-bottom: 10px;
+}
+
+.item-name {
+    display: flex;
+    justify-content: flex-start;
+    font-size: 1.5rem;
+    text-decoration: none;
+    color: black;
+}
+
+.pagination {
+    margin-top: auto;
+    text-align: center;
+    text-decoration: none;
+    list-style: none;
+}
+
+div.hidden.sm:flex-1.sm:flex.sm:items-center.sm:justify-between {
+    display: none;
+}
+
+@media (max-width: 768px) {
+
+    .tab-menu {
+        margin: 0px;
+        padding: 0px 20px;
+    }
+
+    .tab {
+        margin: 0px 0;
+    }
+
+    .item-list {
+        display: flex;
+        justify-content: center;
+        flex-wrap: wrap;
+        gap: 20px;
+    }
+
+
+    .item {
+        margin: 20px 0;
+        flex: 0 0 48%;
+        box-sizing: border-box;
+        text-align: center;
+    }
+
+    .item-image {
+        width: 200px;
+        height: 200px;
+        font-size: 0.5rem;
+        margin: 0 auto;
+    }
+
+    .item-name {
+        font-size: 1rem;
+        padding: 10px 70px;
+    }
+}
+
+@media (max-width: 480px) {
+    .tab-menu {
+        padding: 0px 20px;
+    }
+
+    .item-list {
+        display: flex;
+        justify-content: center;
+        flex-wrap: wrap;
+        gap: 10px;
+    }
+
+    .item {
+        flex: 0 0 40%;
+        box-sizing: border-box;
+        text-align: center;
+        margin: 10px 10px 0;
+    }
+
+    .item-image {
+        width: 100px;
+        height: 100px;
+        font-size: 0.2rem;
+        margin: 0 auto;
+    }
+
+    .item-name {
+        font-size: 0.75rem;
+        width: 100%;
+        padding: 0px 15px;
+    }
+}
