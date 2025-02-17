@@ -48,3 +48,6 @@ Route::post('/checkout', [PurchaseController::class, 'checkout'])->name('checkou
 Route::get('/checkout/success', [PurchaseController::class, 'success'])->name('checkout.success');
 Route::get('/checkout/cancel', [PurchaseController::class, 'cancel'])->name('checkout.cancel');
 
+Route::get('/address/{itemId}', [UserController::class, 'address'])->name('address');
+
+Route::post('/purchase/address/{itemId}', [UserController::class, 'addressEdit'])->name('addressEdit');
