@@ -13,6 +13,8 @@ use Illuminate\Support\Facades\Route;
 |
 */
 
-Route::get('/', function () {
-    return view('welcome');
-});
+Route::get('/', [ItemController::class, 'index'])->name('home');
+
+Route::post('/register', [UserController::class, 'register']);
+
+Route::get('/profile_edit', [UserController::class, 'showEdit'])->name('profile_edit');
