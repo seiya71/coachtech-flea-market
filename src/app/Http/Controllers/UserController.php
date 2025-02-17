@@ -107,4 +107,55 @@ class UserController extends Controller
 
         return view('profile', compact('user', 'currentTab', 'sellingItems', 'purchasedItems'));
     }
+
+    public function showEdit(Request $request)
+    {
+        $user = Auth::user();
+
+        return view('profile_edit', compact('user'));
+    }
+
+    public function updateUserImage(Request $request)
+    {
+        $user = Auth::user();
+
+        if ($request->hasFile('profile_image')) {
+            $path = $request->file('profile_image')->store('profile_images', 'public');
+
+            session(['profile_image' => $path]);
+        }
+
+        return redirect()->route('profile_edit');
+    }
+
+    public function edit(ProfileRequest $request)
+    {
+        $user = Auth::user();
+
+        if (session()->has('profile_image')) {
+            $user->profile_image = session('profile_image');
+        }
+
+        $validatedData = $request->validated();
+        $user->update($validatedData);
+
+        session()->forget('profile_image');
+
+        if ($user->first_login) {
+            $user->first_login = false;
+            $user->save();
+        }
+
+        return redirect('/');
+    }
+
+    public function revertProfileImage()
+    {
+        $user = Auth::user();
+
+        if (session()->has('profile_image')) {
+            $user->profile_image = session('profile_image');
+            $user->save();
+        }
+    }
 }
