@@ -108,13 +108,6 @@ class UserController extends Controller
         return view('profile', compact('user', 'currentTab', 'sellingItems', 'purchasedItems'));
     }
 
-    public function showEdit(Request $request)
-    {
-        $user = Auth::user();
-
-        return view('profile_edit', compact('user'));
-    }
-
     public function updateUserImage(Request $request)
     {
         $user = Auth::user();

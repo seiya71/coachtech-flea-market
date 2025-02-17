@@ -59,3 +59,5 @@ Route::get('/profile_edit', [UserController::class, 'showEdit'])->name('profile_
 Route::post('/profile_edit', [UserController::class, 'edit'])->name('edit');
 
 Route::post('/profile_edit/image', [UserController::class, 'updateUserImage'])->name('updateUserImage');
+
+Route::get('/sell', [ItemController::class, 'showSell'])->name('showSell');
