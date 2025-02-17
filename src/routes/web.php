@@ -53,3 +53,9 @@ Route::get('/address/{itemId}', [UserController::class, 'address'])->name('addre
 Route::post('/purchase/address/{itemId}', [UserController::class, 'addressEdit'])->name('addressEdit');
 
 Route::get('/profile', [UserController::class, 'profile'])->name('profile');
+
+Route::get('/profile_edit', [UserController::class, 'showEdit'])->name('profile_edit');
+
+Route::post('/profile_edit', [UserController::class, 'edit'])->name('edit');
+
+Route::post('/profile_edit/image', [UserController::class, 'updateUserImage'])->name('updateUserImage');
