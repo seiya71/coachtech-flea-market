@@ -88,4 +88,23 @@ class UserController extends Controller
 
         return redirect()->route('purchase', ['itemId' => $itemId]);
     }
+
+    public function profile(Request $request)
+    {
+        $user = Auth::user();
+
+        if (!$user) {
+            return redirect()->route('login');
+        }
+
+        $currentTab = $request->query('tab', 'selling');
+
+        $sellingItems = Item::where('user_id', $user->id)->paginate(8);
+
+        $purchasedItems = Purchase::where('user_id', $user->id)
+            ->with('item')
+            ->paginate(8);
+
+        return view('profile', compact('user', 'currentTab', 'sellingItems', 'purchasedItems'));
+    }
 }

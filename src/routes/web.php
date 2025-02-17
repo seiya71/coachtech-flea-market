@@ -51,3 +51,5 @@ Route::get('/checkout/cancel', [PurchaseController::class, 'cancel'])->name('che
 Route::get('/address/{itemId}', [UserController::class, 'address'])->name('address');
 
 Route::post('/purchase/address/{itemId}', [UserController::class, 'addressEdit'])->name('addressEdit');
+
+Route::get('/profile', [UserController::class, 'profile'])->name('profile');
