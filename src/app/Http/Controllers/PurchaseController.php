@@ -41,4 +41,70 @@ class PurchaseController extends Controller
             'request' => $request,
         ]);
     }
+
+    public function checkout(Request $request)
+    {
+        $request->validate([
+            'payment_method' => 'required|in:card,konbini',
+        ]);
+
+        $paymentMethod = $request->input('payment_method');
+
+        Stripe::setApiKey(config('services.stripe.secret'));
+
+        $item = Item::findOrFail($request->item_id);
+
+        session([
+            'itemId' => $item->id,
+            'userId' => Auth::id(),
+        ]);
+
+        $session = Session::create([
+            'payment_method_types' => [$paymentMethod],
+            'line_items' => [
+                [
+                    'price_data' => [
+                        'currency' => 'jpy',
+                        'product_data' => [
+                            'name' => $item->item_name,
+                        ],
+                        'unit_amount' => $item->price,
+                    ],
+                    'quantity' => 1,
+                ],
+            ],
+            'mode' => 'payment',
+            'success_url' => route('checkout.success'),
+            'cancel_url' => route('checkout.cancel'),
+        ]);
+
+        return redirect($session->url);
+    }
+
+    public function success()
+    {
+        $itemId = session('itemId');
+        $userId = session('userId');
+
+        if (!$itemId || !$userId) {
+            return redirect('/')->with('error', '購入情報が見つかりません。');
+        }
+
+        DB::transaction(function () use ($itemId, $userId) {
+            $item = Item::findOrFail($itemId);
+            $item->update(['sold' => true]);
+
+            Purchase::create([
+                'user_id' => $userId,
+                'item_id' => $itemId,
+            ]);
+        });
+
+        return view('checkout.success');
+    }
+
+    public function cancel()
+    {
+        return view('checkout.cancel');
+    }
 }

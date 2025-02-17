@@ -42,3 +42,9 @@ Route::post('/addlike/{itemId}', [ItemController::class, 'addlike'])->name('addl
 Route::post('/addcomment/{itemId}', [ItemController::class, 'addcomment'])->name('addcomment');
 
 Route::get('/purchase/{itemId}', [PurchaseController::class, 'purchase'])->name('purchase');
+
+Route::post('/checkout', [PurchaseController::class, 'checkout'])->name('checkout');
+
+Route::get('/checkout/success', [PurchaseController::class, 'success'])->name('checkout.success');
+Route::get('/checkout/cancel', [PurchaseController::class, 'cancel'])->name('checkout.cancel');
+
