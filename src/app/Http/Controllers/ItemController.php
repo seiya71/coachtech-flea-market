@@ -158,4 +158,15 @@ class ItemController extends Controller
 
         return redirect()->back();
     }
+
+    public function showSell(Request $request)
+    {
+        if (!Auth::check()) {
+            return redirect()->route('login');
+        }
+
+        $categories = Category::all();
+
+        return view('sell', compact('categories'));
+    }
 }
