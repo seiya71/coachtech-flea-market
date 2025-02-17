@@ -37,4 +37,28 @@ class UserController extends Controller
 
         return view('profile_edit', compact('user'));
     }
+
+    public function login(LoginRequest $request)
+    {
+        $credentials = $request->validate([
+            'email' => ['required', 'email'],
+            'password' => ['required'],
+        ]);
+
+        if (Auth::attempt($credentials)) {
+            $user = Auth::user();
+
+            if (!$user->hasVerifiedEmail()) {
+                Auth::logout();
+                return redirect('/email/verify')->with('error', 'メール認証を完了してください。');
+            }
+
+            $request->session()->regenerate();
+            return redirect('/');
+        } else {
+            return back()->withErrors([
+                'email' => 'ログイン情報が正しくありません。',
+            ]);
+        }
+    }
 }
