@@ -61,4 +61,31 @@ class UserController extends Controller
             ]);
         }
     }
+
+    public function address(Request $request, $itemId)
+    {
+        $user = Auth::user();
+        $item = Item::findOrFail($itemId);
+
+        return view('address', [
+            'user' => $user,
+            'item' => $item,
+        ]);
+    }
+
+    public function addressEdit(Request $request, $itemId)
+    {
+        $userId = Auth::id();
+
+        if (!$userId) {
+            return view('auth.login');
+        }
+
+        $addressData = $request->only(['postal_code', 'address', 'building_name']);
+
+        $user = User::findOrFail($userId);
+        $user->update($addressData);
+
+        return redirect()->route('purchase', ['itemId' => $itemId]);
+    }
 }
