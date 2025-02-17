@@ -169,4 +169,40 @@ class ItemController extends Controller
 
         return view('sell', compact('categories'));
     }
+
+    public function sell(ExhibitionRequest $request)
+    {
+        $user = Auth::user();
+
+        $validatedData = $request->validated();
+
+        $item = Item::create([
+            'item_name' => $validatedData['item_name'],
+            'brand' => $validatedData['brand'],
+            'description' => $validatedData['description'],
+            'price' => $validatedData['price'],
+            'user_id' => $user->id,
+            'item_image' => $validatedData['item_image'] ?? null,
+            'condition' => $validatedData['condition'],
+        ]);
+
+        if (isset($validatedData['categories'])) {
+            $item->categories()->attach($validatedData['categories']);
+        }
+
+        session()->forget('item_image');
+
+        return redirect()->route('home');
+    }
+
+    public function uploadItemImage(Request $request)
+    {
+        if ($request->hasFile('item_image')) {
+            $path = $request->file('item_image')->store('item_images', 'public');
+
+            session(['item_image' => $path]);
+        }
+
+        return back();
+    }
 }

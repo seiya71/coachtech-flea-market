@@ -1,6 +1,14 @@
 <?php
 
 use Illuminate\Support\Facades\Route;
+use Illuminate\Foundation\Auth\EmailVerificationRequest;
+use App\Http\Controllers\UserController;
+use App\Http\Controllers\ItemController;
+use App\Http\Controllers\PurchaseController;
+use Stripe\Stripe;
+use Stripe\Checkout\Session;
+use App\Http\Controllers\StripeWebhookController;
+use Laravel\Fortify\Features;
 
 /*
 |--------------------------------------------------------------------------
@@ -61,3 +69,7 @@ Route::post('/profile_edit', [UserController::class, 'edit'])->name('edit');
 Route::post('/profile_edit/image', [UserController::class, 'updateUserImage'])->name('updateUserImage');
 
 Route::get('/sell', [ItemController::class, 'showSell'])->name('showSell');
+
+Route::post('/sell', [ItemController::class, 'sell'])->name('sell');
+
+Route::post('/upload-item-image', [ItemController::class, 'uploadItemImage'])->name('uploadItemImage');
