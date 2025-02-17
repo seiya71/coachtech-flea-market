@@ -49,4 +49,94 @@ class ItemController extends Controller
 
         return view('index', compact('items', 'myitems', 'tab', 'query'));
     }
+
+    public function getlike($itemId)
+    {
+
+        $userId = Auth::id();
+
+        $likeCount = Like::where('item_id', $itemId)->count();
+
+        $userHasLiked = false;
+        if ($userId) {
+            $userHasLiked = Like::where('item_id', $itemId)->where('user_id', $userId)->exists();
+        }
+
+        return [
+            'likeCount' => $likeCount,
+            'userHasLiked' => $userHasLiked,
+        ];
+    }
+
+    public function getcomment($itemId)
+    {
+
+        $comments = Comment::where('item_id', $itemId)
+            ->with('user')
+            ->get();
+
+        $commentCount = $comments->count();
+
+        if ($commentCount === 0) {
+            return [
+                'commentCount' => 0,
+                'comments' => [],
+            ];
+        }
+
+        $commentData = $comments->map(function ($comment) {
+            $user = $comment->user;
+
+            return [
+                'user_image' => $user->profile_image,
+                'user_name' => $user->name,
+                'content' => $comment->content,
+            ];
+        });
+
+        return [
+            'commentCount' => $commentCount,
+            'comments' => $commentData,
+        ];
+    }
+
+    public function show($id)
+    {
+        $item = Item::findOrFail($id);
+
+        $likeData = $this->getlike($id);
+
+        $commentData = $this->getcomment($id);
+
+        return view('item', [
+            'item' => $item,
+            'likeCount' => $likeData['likeCount'],
+            'userHasLiked' => $likeData['userHasLiked'],
+            'comments' => $commentData['comments'],
+            'commentCount' => $commentData['commentCount'],
+            'categories' => $item->categories,
+        ]);
+    }
+
+    public function addlike($itemId)
+    {
+        $userId = Auth::id();
+
+        if (!$userId) {
+            return view('auth.login');
+        }
+
+        $like = Like::where('item_id', $itemId)->where('user_id', $userId)->first();
+
+        if ($like) {
+            $like->delete();
+        } else {
+            Like::create([
+                'user_id' => $userId,
+                'item_id' => $itemId
+            ]);
+        }
+
+        return redirect()->back();
+    }
 }
