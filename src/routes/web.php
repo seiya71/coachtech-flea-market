@@ -40,3 +40,5 @@ Route::get('/item/{id}', [ItemController::class, 'show']);
 Route::post('/addlike/{itemId}', [ItemController::class, 'addlike'])->name('addlike');
 
 Route::post('/addcomment/{itemId}', [ItemController::class, 'addcomment'])->name('addcomment');
+
+Route::get('/purchase/{itemId}', [PurchaseController::class, 'purchase'])->name('purchase');
