@@ -38,3 +38,5 @@ Route::post('/email/verification-notification', function (Request $request) {
 Route::get('/item/{id}', [ItemController::class, 'show']);
 
 Route::post('/addlike/{itemId}', [ItemController::class, 'addlike'])->name('addlike');
+
+Route::post('/addcomment/{itemId}', [ItemController::class, 'addcomment'])->name('addcomment');

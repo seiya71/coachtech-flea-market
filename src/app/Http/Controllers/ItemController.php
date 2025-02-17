@@ -139,4 +139,23 @@ class ItemController extends Controller
 
         return redirect()->back();
     }
+
+    public function addcomment(CommentRequest $request, $itemId)
+    {
+        $userId = Auth::id();
+
+        if (!$userId) {
+            return redirect('/login');
+        }
+
+        $content = $request->input('content');
+
+        Comment::create([
+            'user_id' => $userId,
+            'item_id' => $itemId,
+            'content' => $content,
+        ]);
+
+        return redirect()->back();
+    }
 }
