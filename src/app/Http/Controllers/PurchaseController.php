@@ -8,6 +8,7 @@ use Illuminate\Support\Facades\DB;
 use App\Models\Item;
 use App\Models\User;
 use App\Models\Comment;
+use App\Models\Address;
 use App\Models\Purchase;
 use Stripe\Stripe;
 use Stripe\Checkout\Session;
@@ -25,22 +26,38 @@ class PurchaseController extends Controller
         $item = Item::findOrFail($itemId);
         $user = User::findOrFail($userId);
 
+        $address = session('shipping_address', null);
+
+        if (!$address) {
+            $address = Address::where('user_id', $userId)->latest()->first();
+        }
+
+        if (!$address) {
+            $address = new Address([
+                'postal_code' => $user->postal_code,
+                'address' => $user->address,
+                'building_name' => $user->building_name,
+            ]);
+        }
+
         $paymentMethod = $request->input('payment_method', '');
         $paymentMethods = [
             'card' => 'カード払い',
             'konbini' => 'コンビニ払い',
         ];
 
-        $selectedPaymentMethod = $paymentMethod ?: '';
-
         return view('purchase', [
             'item' => $item,
             'user' => $user,
-            'selectedPaymentMethod' => $selectedPaymentMethod,
+            'address' => $address,
+            'selectedPaymentMethod' => $paymentMethod ?: '',
             'paymentMethods' => $paymentMethods,
             'request' => $request,
         ]);
     }
+
+
+
 
     public function checkout(Request $request)
     {
@@ -49,18 +66,17 @@ class PurchaseController extends Controller
         ]);
 
         $paymentMethod = $request->input('payment_method');
+        $itemId = session('itemId', $request->item_id);
+        $item = Item::findOrFail($itemId);
+        $userId = auth()->id();
+
+        session()->put('itemId', $itemId);
+        session()->put('userId', $userId);
 
         Stripe::setApiKey(config('services.stripe.secret'));
 
-        $item = Item::findOrFail($request->item_id);
-
-        session([
-            'itemId' => $item->id,
-            'userId' => Auth::id(),
-        ]);
-
         $session = Session::create([
-            'payment_method_types' => [$paymentMethod],
+            'payment_method_types' => [$paymentMethod === 'card' ? 'card' : 'konbini'],
             'line_items' => [
                 [
                     'price_data' => [
@@ -74,10 +90,10 @@ class PurchaseController extends Controller
                 ],
             ],
             'mode' => 'payment',
-            'success_url' => route('checkout.success'),
-            'cancel_url' => route('checkout.cancel'),
+            'success_url' => route('checkout.success', [], true) . '?session_id={CHECKOUT_SESSION_ID}',
+            'cancel_url' => route('checkout.cancel', [], true),
         ]);
-
+        
         return redirect($session->url);
     }
 
@@ -91,14 +107,33 @@ class PurchaseController extends Controller
         }
 
         DB::transaction(function () use ($itemId, $userId) {
+            $address = Address::where('user_id', $userId)->first();
+
+            if (!$address) {
+                $user = User::findOrFail($userId);
+
+                $address = Address::create([
+                    'user_id' => $user->id,
+                    'postal_code' => $user->postal_code,
+                    'address' => $user->address,
+                    'building_name' => $user->building_name,
+                ]);
+            }
+
+            //dd('Address 作成後', $address);
+
             $item = Item::findOrFail($itemId);
             $item->update(['sold' => true]);
 
             Purchase::create([
                 'user_id' => $userId,
                 'item_id' => $itemId,
+                'address_id' => $address->id,
             ]);
+            //dd('Purchase 作成後', Purchase::all()->toArray());
         });
+
+        session()->forget('itemId');
 
         return view('checkout.success');
     }

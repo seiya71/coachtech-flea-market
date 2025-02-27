@@ -8,6 +8,8 @@ use Illuminate\Foundation\Auth\User as Authenticatable;
 use Illuminate\Notifications\Notifiable;
 use Laravel\Sanctum\HasApiTokens;
 use Illuminate\Database\Eloquent\Relations\HasMany;
+use App\Models\Item;
+
 
 class User extends Authenticatable implements MustVerifyEmail
 {
@@ -26,7 +28,8 @@ class User extends Authenticatable implements MustVerifyEmail
         'postal_code',
         'address',
         'building_name',
-        'first_login'
+        'email_verified_at',
+        'first_login',
     ];
 
     /**
@@ -61,5 +64,10 @@ class User extends Authenticatable implements MustVerifyEmail
     public function purchases()
     {
         return $this->hasMany(Purchase::class, 'user_id');
+    }
+
+    public function addresses()
+    {
+        return $this->hasMany(Address::class);
     }
 }

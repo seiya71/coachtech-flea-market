@@ -38,17 +38,16 @@ class ItemController extends Controller
                 ->searchByName($query)
                 ->orderBy('created_at', 'desc')
                 ->paginate(20);
-        } elseif ($tab == 'mylist') {
-            if (Auth::check()) {
-                $myitems = Auth::user()->likedItems()
-                    ->searchByName($query)
-                    ->orderBy('created_at', 'desc')
-                    ->paginate(20);
-            }
+        } elseif ($tab == 'mylist' && Auth::check()) {
+            $myitems = Auth::user()->likedItems()
+                ->searchByName($query)
+                ->orderBy('created_at', 'desc')
+                ->paginate(20);
         }
 
         return view('index', compact('items', 'myitems', 'tab', 'query'));
     }
+
 
     public function getlike($itemId)
     {

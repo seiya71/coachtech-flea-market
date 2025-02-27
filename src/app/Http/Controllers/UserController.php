@@ -13,6 +13,7 @@ use App\Http\Requests\ProfileRequest;
 use App\Models\User;
 use App\Models\Item;
 use App\Models\Purchase;
+use App\Models\Address;
 
 class UserController extends Controller
 {
@@ -62,14 +63,33 @@ class UserController extends Controller
         }
     }
 
+    public function logout(Request $request)
+    {
+        Auth::logout();
+
+        $request->session()->invalidate();
+        $request->session()->regenerateToken();
+
+        return redirect('/');
+    }
+
     public function address(Request $request, $itemId)
     {
         $user = Auth::user();
         $item = Item::findOrFail($itemId);
 
+        $address = Address::where('user_id', $user->id)->first();
+
+        $defaultAddress = [
+            'postal_code' => $address->postal_code ?? $user->postal_code,
+            'address' => $address->address ?? $user->address,
+            'building_name' => $address->building_name ?? $user->building_name,
+        ];
+
         return view('address', [
             'user' => $user,
             'item' => $item,
+            'defaultAddress' => $defaultAddress,
         ]);
     }
 
@@ -78,16 +98,22 @@ class UserController extends Controller
         $userId = Auth::id();
 
         if (!$userId) {
-            return view('auth.login');
+            return redirect()->route('login');
         }
 
         $addressData = $request->only(['postal_code', 'address', 'building_name']);
 
-        $user = User::findOrFail($userId);
-        $user->update($addressData);
+        $address = Address::updateOrCreate(
+            ['user_id' => $userId],
+            $addressData
+        );
+
+        session(['shipping_address' => $address]);
 
         return redirect()->route('purchase', ['itemId' => $itemId]);
     }
+
+
 
     public function profile(Request $request)
     {
