@@ -21,14 +21,13 @@ use App\Models\ItemCategory;
 
 class PurchaseTest extends TestCase
 {
-    use RefreshDatabase; // テスト用のデータベースを毎回リセット
+    use RefreshDatabase;
 
     protected function setUp(): void
     {
         parent::setUp();
 
-        // `Session` を事前にモック
-        Mockery::close(); // 既存のモックをクリア
+        Mockery::close();
         $mockSession = Mockery::mock('overload:Stripe\Checkout\Session');
         $mockSession->shouldReceive('create')->andReturn((object) [
             'url' => route('checkout.success') . '?session_id=test_session_id'

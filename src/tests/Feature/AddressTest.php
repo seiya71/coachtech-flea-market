@@ -40,7 +40,6 @@ class AddressTest extends TestCase
         $this->post(route('addressEdit', ['itemId' => $item->id]), $newAddressData)
             ->assertRedirect(route('purchase', ['itemId' => $item->id]));
 
-        // ⑦ 変更後の購入画面で住所が更新されているか確認
         $response = $this->get(route('purchase', ['itemId' => $item->id]));
         $response->assertStatus(200);
         $response->assertSee('123-4567');

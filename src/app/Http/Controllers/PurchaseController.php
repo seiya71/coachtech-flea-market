@@ -120,8 +120,6 @@ class PurchaseController extends Controller
                 ]);
             }
 
-            //dd('Address 作成後', $address);
-
             $item = Item::findOrFail($itemId);
             $item->update(['sold' => true]);
 
@@ -130,7 +128,6 @@ class PurchaseController extends Controller
                 'item_id' => $itemId,
                 'address_id' => $address->id,
             ]);
-            //dd('Purchase 作成後', Purchase::all()->toArray());
         });
 
         session()->forget('itemId');

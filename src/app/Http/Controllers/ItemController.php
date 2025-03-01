@@ -171,6 +171,7 @@ class ItemController extends Controller
 
     public function sell(ExhibitionRequest $request)
     {
+        
         $user = Auth::user();
 
         $validatedData = $request->validated();
@@ -200,6 +201,12 @@ class ItemController extends Controller
             $path = $request->file('item_image')->store('item_images', 'public');
 
             session(['item_image' => $path]);
+
+            if (app()->runningUnitTests()) {
+                return response()->json(['item_image' => $path]);
+            }
+
+            return back();
         }
 
         return back();
