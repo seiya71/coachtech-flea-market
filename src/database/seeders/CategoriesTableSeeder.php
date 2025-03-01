@@ -15,22 +15,22 @@ class CategoriesTableSeeder extends Seeder
     public function run()
     {
         DB::table('categories')->insert([
-            ['category_name' => 'ファッション'],//1
-            ['category_name' => '家電'],//2
-            ['category_name' => 'インテリア'],//3
-            ['category_name' => 'レディース'],//4
-            ['category_name' => 'メンズ'],//5
-            ['category_name' => 'コスメ'],//6
-            ['category_name' => '本'],//7
-            ['category_name' => 'ゲーム'],//8
-            ['category_name' => 'スポーツ'],//9
-            ['category_name' => 'キッチン'],//10
-            ['category_name' => 'ハンドメイド'],//11
-            ['category_name' => 'アクセサリー'],//12
-            ['category_name' => 'おもちゃ'],//13
-            ['category_name' => 'ベビー・キッズ'],//14
-            ['category_name' => 'PC'],//15
-            ['category_name' => '電子機器'],//16
+            ['category_name' => 'ファッション'],
+            ['category_name' => '家電'],
+            ['category_name' => 'インテリア'],
+            ['category_name' => 'レディース'],
+            ['category_name' => 'メンズ'],
+            ['category_name' => 'コスメ'],
+            ['category_name' => '本'],
+            ['category_name' => 'ゲーム'],
+            ['category_name' => 'スポーツ'],
+            ['category_name' => 'キッチン'],
+            ['category_name' => 'ハンドメイド'],
+            ['category_name' => 'アクセサリー'],
+            ['category_name' => 'おもちゃ'],
+            ['category_name' => 'ベビー・キッズ'],
+            ['category_name' => 'PC'],
+            ['category_name' => '電子機器'],
         ]);
     }
 }
