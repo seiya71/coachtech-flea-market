@@ -31,14 +31,11 @@
     </div>
     <div class="shipping-info">
         <div class="address-title">配送先</div>
-        <form action="{{ route('address', ['itemId' => $item->id]) }}" method="GET">
-            @csrf
-            <button class="address-edit__link" type="submit">変更する</button>
-        </form>
+        <a href="{{ route('address', ['itemId' => $item->id]) }}" class="address-edit__link">変更する</a>
+
         <div class="address-data">
-            <p>〒 {{ $user->postal_code }}</p>
-            <p>{{ $user->address }}{{ $user->building_name }}</p>
-            <p></p>
+            <p>〒 {{ $address->postal_code }}</p>
+            <p>{{ $address->address }}{{ $address->building_name }}</p>
         </div>
     </div>
     <div class="summary-container">
@@ -55,7 +52,7 @@
                 <td class="summary-table__description">{{ $paymentMethods[$selectedPaymentMethod] ?? '' }}</td>
             </tr>
         </table>
-        <form method="POST" action="{{ route('checkout') }}">
+        <form method="POST" action="{{ route('checkout', ['itemId' => $item->id]) }}">
             @csrf
             <input type="hidden" name="item_id" value="{{ $item->id }}">
             <input type="hidden" name="payment_method" value="{{ $selectedPaymentMethod }}">

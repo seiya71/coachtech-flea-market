@@ -29,6 +29,8 @@ class CategoriesTableSeeder extends Seeder
             ['category_name' => 'アクセサリー'],
             ['category_name' => 'おもちゃ'],
             ['category_name' => 'ベビー・キッズ'],
+            ['category_name' => 'PC'],
+            ['category_name' => '電子機器'],
         ]);
     }
 }

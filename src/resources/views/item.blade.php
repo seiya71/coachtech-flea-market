@@ -90,6 +90,9 @@
             <form action="{{ route('addcomment', $item->id) }}" method="POST">
                 @csrf
                 <textarea name="content"></textarea>
+                @error('content')
+                    <p>{{ $message }}</p>
+                @enderror
                 <button class="comment-btn" type="submit">コメントを送信する</button>
             </form>
         </section>

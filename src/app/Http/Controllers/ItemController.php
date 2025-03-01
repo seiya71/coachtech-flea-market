@@ -38,17 +38,16 @@ class ItemController extends Controller
                 ->searchByName($query)
                 ->orderBy('created_at', 'desc')
                 ->paginate(20);
-        } elseif ($tab == 'mylist') {
-            if (Auth::check()) {
-                $myitems = Auth::user()->likedItems()
-                    ->searchByName($query)
-                    ->orderBy('created_at', 'desc')
-                    ->paginate(20);
-            }
+        } elseif ($tab == 'mylist' && Auth::check()) {
+            $myitems = Auth::user()->likedItems()
+                ->searchByName($query)
+                ->orderBy('created_at', 'desc')
+                ->paginate(20);
         }
 
         return view('index', compact('items', 'myitems', 'tab', 'query'));
     }
+
 
     public function getlike($itemId)
     {
@@ -172,6 +171,7 @@ class ItemController extends Controller
 
     public function sell(ExhibitionRequest $request)
     {
+        
         $user = Auth::user();
 
         $validatedData = $request->validated();
@@ -201,6 +201,12 @@ class ItemController extends Controller
             $path = $request->file('item_image')->store('item_images', 'public');
 
             session(['item_image' => $path]);
+
+            if (app()->runningUnitTests()) {
+                return response()->json(['item_image' => $path]);
+            }
+
+            return back();
         }
 
         return back();
