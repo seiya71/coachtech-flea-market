@@ -1,7 +1,7 @@
 # coachtech-flea-market
 ## 環境構築
 **Dockerビルド**
-1. `git@github.com:seiya71/coachtech-flea-market.git`
+1. `git clone git@github.com:seiya71/coachtech-flea-market.git`
 2. DockerDesktopアプリを立ち上げる
 3. `docker-compose up -d --build`
 > *MacのM1・M2チップのPCの場合、`no matching manifest for linux/arm64/v8 in the manifest list entries`のメッセージが表示されビルドができないことがあります。
@@ -57,8 +57,27 @@ php artisan key:generate
 ``` bash
 php artisan migrate
 ```
+9. シーディング用の商品画像の配置場所の作成
+``` bash
+mkdir -p storage/app/public/images/products
+```
+10. シーディング用の商品画像を設置
 
-9. シーディングの実行
+商品画像を `storage/app/public/images/products/` に保存する必要があります。  
+画像はリポジトリには含まれないため、以下のリンクから手動で追加してください。  
+追加する際にファイルの名称をリンク名と同じ名称へ変更してください。  
+[腕時計.jpg](https://coachtech-matter.s3.ap-northeast-1.amazonaws.com/image/Armani+Mens+Clock.jpg)  
+[HDD.jpg](https://coachtech-matter.s3.ap-northeast-1.amazonaws.com/image/HDD+Hard+Disk.jpg)  
+[玉ねぎ3束.jpg](https://coachtech-matter.s3.ap-northeast-1.amazonaws.com/image/iLoveIMG+d.jpg)  
+[革靴.jpg](https://coachtech-matter.s3.ap-northeast-1.amazonaws.com/image/Leather+Shoes+Product+Photo.jpg)  
+[ノートPC.jpg](https://coachtech-matter.s3.ap-northeast-1.amazonaws.com/image/Living+Room+Laptop.jpg)  
+[マイク.jpg](https://coachtech-matter.s3.ap-northeast-1.amazonaws.com/image/Music+Mic+4632231.jpg)  
+[ショルダーバッグ.jpg](https://coachtech-matter.s3.ap-northeast-1.amazonaws.com/image/Purse+fashion+pocket.jpg)  
+[タンブラー.jpg](https://coachtech-matter.s3.ap-northeast-1.amazonaws.com/image/Tumbler+souvenir.jpg)  
+[コーヒーミル.jpg](https://coachtech-matter.s3.ap-northeast-1.amazonaws.com/image/Waitress+with+Coffee+Grinder.jpg)  
+[メイクセット.jpg](https://coachtech-matter.s3.ap-northeast-1.amazonaws.com/image/%E5%A4%96%E5%87%BA%E3%83%A1%E3%82%A4%E3%82%AF%E3%82%A2%E3%83%83%E3%83%95%E3%82%9A%E3%82%BB%E3%83%83%E3%83%88.jpg)  
+
+11. シーディングの実行
 ``` bash
 php artisan db:seed
 ```
@@ -75,4 +94,4 @@ php artisan db:seed
 ![/ER](/ER.drawio.png)
 ## URL
 - 開発環境：http://localhost/
-- phpMyAdmin:：http://localhost:8080/
+- phpMyAdmin：http://localhost:8080/
