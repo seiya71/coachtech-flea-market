@@ -59,25 +59,39 @@ php artisan migrate
 ```
 9. シーディング用の商品画像の配置場所の作成
 ``` bash
-mkdir -p storage/app/public/images/products
+mkdir -p storage/app/public/item_images
 ```
 10. シーディング用の商品画像を設置
 
-商品画像を `storage/app/public/images/products/` に保存する必要があります。  
-画像はリポジトリには含まれないため、以下のリンクから手動で追加してください。  
-追加する際にファイルの名称をリンク名と同じ名称へ変更してください。  
-[腕時計.jpg](https://coachtech-matter.s3.ap-northeast-1.amazonaws.com/image/Armani+Mens+Clock.jpg)  
-[HDD.jpg](https://coachtech-matter.s3.ap-northeast-1.amazonaws.com/image/HDD+Hard+Disk.jpg)  
-[玉ねぎ3束.jpg](https://coachtech-matter.s3.ap-northeast-1.amazonaws.com/image/iLoveIMG+d.jpg)  
-[革靴.jpg](https://coachtech-matter.s3.ap-northeast-1.amazonaws.com/image/Leather+Shoes+Product+Photo.jpg)  
-[ノートPC.jpg](https://coachtech-matter.s3.ap-northeast-1.amazonaws.com/image/Living+Room+Laptop.jpg)  
-[マイク.jpg](https://coachtech-matter.s3.ap-northeast-1.amazonaws.com/image/Music+Mic+4632231.jpg)  
-[ショルダーバッグ.jpg](https://coachtech-matter.s3.ap-northeast-1.amazonaws.com/image/Purse+fashion+pocket.jpg)  
-[タンブラー.jpg](https://coachtech-matter.s3.ap-northeast-1.amazonaws.com/image/Tumbler+souvenir.jpg)  
-[コーヒーミル.jpg](https://coachtech-matter.s3.ap-northeast-1.amazonaws.com/image/Waitress+with+Coffee+Grinder.jpg)  
-[メイクセット.jpg](https://coachtech-matter.s3.ap-northeast-1.amazonaws.com/image/%E5%A4%96%E5%87%BA%E3%83%A1%E3%82%A4%E3%82%AF%E3%82%A2%E3%83%83%E3%83%95%E3%82%9A%E3%82%BB%E3%83%83%E3%83%88.jpg)  
+商品画像を `storage/app/public/item_images/` に保存する必要があります。  
+以下を実行してください。
+``` bash
+curl -o storage/app/public/item_images/腕時計.png "https://coachtech-matter.s3.ap-northeast-1.amazonaws.com/image/Armani+Mens+Clock.jpg"
 
-11. シーディングの実行
+curl -o storage/app/public/item_images/HDD.png "https://coachtech-matter.s3.ap-northeast-1.amazonaws.com/image/HDD+Hard+Disk.jpg"
+
+curl -o storage/app/public/item_images/玉ねぎ3束.png "https://coachtech-matter.s3.ap-northeast-1.amazonaws.com/image/iLoveIMG+d.jpg"
+
+curl -o storage/app/public/item_images/革靴.png "https://coachtech-matter.s3.ap-northeast-1.amazonaws.com/image/Leather+Shoes+Product+Photo.jpg"
+
+curl -o storage/app/public/item_images/ノートPC.png "https://coachtech-matter.s3.ap-northeast-1.amazonaws.com/image/Living+Room+Laptop.jpg"
+
+curl -o storage/app/public/item_images/マイク.png "https://coachtech-matter.s3.ap-northeast-1.amazonaws.com/image/Music+Mic+4632231.jpg"
+
+curl -o storage/app/public/item_images/ショルダーバッグ.png "https://coachtech-matter.s3.ap-northeast-1.amazonaws.com/image/Purse+fashion+pocket.jpg"
+
+curl -o storage/app/public/item_images/タンブラー.png "https://coachtech-matter.s3.ap-northeast-1.amazonaws.com/image/Tumbler+souvenir.jpg"
+
+curl -o storage/app/public/item_images/コーヒーミル.png "https://coachtech-matter.s3.ap-northeast-1.amazonaws.com/image/Waitress+with+Coffee+Grinder.jpg"
+
+curl -o storage/app/public/item_images/メイクセット.png "https://coachtech-matter.s3.ap-northeast-1.amazonaws.com/image/%E5%A4%96%E5%87%BA%E3%83%A1%E3%82%A4%E3%82%AF%E3%82%A2%E3%83%83%E3%83%95%E3%82%9A%E3%82%BB%E3%83%83%E3%83%88.jpg"
+```
+11.シンボリックリンクの作成
+``` bash
+php artisan storage:link
+```
+
+12. シーディングの実行
 ``` bash
 php artisan db:seed
 ```
