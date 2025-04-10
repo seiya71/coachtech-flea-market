@@ -2,7 +2,7 @@
 ## 環境構築
 **Dockerビルド**
 1. `git clone git@github.com:seiya71/coachtech-flea-market.git`
-2. DockerDesktopアプリを立ち上げる
+2. `cd coachtech-flea-market`
 3. `docker-compose up -d --build`
 > *MacのM1・M2チップのPCの場合、`no matching manifest for linux/arm64/v8 in the manifest list entries`のメッセージが表示されビルドができないことがあります。
 エラーが発生する場合は、docker-compose.ymlファイルの「mysql」内に「platform」の項目を追加で記載してください*
@@ -14,14 +14,9 @@ mysql:
 ```
 
 **Laravel環境構築**
-1. `docker-compose exec php bash`
-2. `composer install`
-3. 「.env.example」ファイルを 「.env」ファイルに命名を変更。または、新しく.envファイルを作成
-4. ストレージのリンクを作成
-```
-php artisan storage:link
-```
-5. .envに以下の環境変数を追加
+1. `docker-compose exec php composer install`
+2. `cp src/.env.example src/.env`
+3. .envに以下の環境変数を追加
 ``` text
 DB_CONNECTION=mysql
 DB_HOST=mysql
@@ -42,58 +37,53 @@ MAIL_ENCRYPTION=tls
 MAIL_FROM_ADDRESS=【送信元のメールアドレス】
 MAIL_FROM_NAME="${APP_NAME}"
 ```
+4. キャッシュをクリア
+```
+docker-compose exec php php artisan config:clear
+docker-compose exec php php artisan cache:clear
+```
+5. アプリケーションキーの作成
+``` bash
+docker-compose exec php php artisan key:generate
+```
+6. `docker-compose exec php php artisan storage:link`
 
-6. キャッシュをクリア
-```
-php artisan config:clear
-php artisan cache:clear
-```
-7. アプリケーションキーの作成
+7. マイグレーションの実行
 ``` bash
-php artisan key:generate
+docker-compose exec php php artisan migrate
 ```
-
-8. マイグレーションの実行
+8. シーディング用の商品画像の配置場所の作成
 ``` bash
-php artisan migrate
+mkdir -p src/storage/app/public/item_images
 ```
-9. シーディング用の商品画像の配置場所の作成
-``` bash
-mkdir -p storage/app/public/item_images
-```
-10. シーディング用の商品画像を設置
+9. シーディング用の商品画像を設置
 
 商品画像を `storage/app/public/item_images/` に保存する必要があります。  
 以下を実行してください。
 ``` bash
-curl -o storage/app/public/item_images/腕時計.png "https://coachtech-matter.s3.ap-northeast-1.amazonaws.com/image/Armani+Mens+Clock.jpg"
+curl -o src/storage/app/public/item_images/腕時計.png "https://coachtech-matter.s3.ap-northeast-1.amazonaws.com/image/Armani+Mens+Clock.jpg"
 
-curl -o storage/app/public/item_images/HDD.png "https://coachtech-matter.s3.ap-northeast-1.amazonaws.com/image/HDD+Hard+Disk.jpg"
+curl -o src/storage/app/public/item_images/HDD.png "https://coachtech-matter.s3.ap-northeast-1.amazonaws.com/image/HDD+Hard+Disk.jpg"
 
-curl -o storage/app/public/item_images/玉ねぎ3束.png "https://coachtech-matter.s3.ap-northeast-1.amazonaws.com/image/iLoveIMG+d.jpg"
+curl -o src/storage/app/public/item_images/玉ねぎ3束.png "https://coachtech-matter.s3.ap-northeast-1.amazonaws.com/image/iLoveIMG+d.jpg"
 
-curl -o storage/app/public/item_images/革靴.png "https://coachtech-matter.s3.ap-northeast-1.amazonaws.com/image/Leather+Shoes+Product+Photo.jpg"
+curl -o src/storage/app/public/item_images/革靴.png "https://coachtech-matter.s3.ap-northeast-1.amazonaws.com/image/Leather+Shoes+Product+Photo.jpg"
 
-curl -o storage/app/public/item_images/ノートPC.png "https://coachtech-matter.s3.ap-northeast-1.amazonaws.com/image/Living+Room+Laptop.jpg"
+curl -o src/storage/app/public/item_images/ノートPC.png "https://coachtech-matter.s3.ap-northeast-1.amazonaws.com/image/Living+Room+Laptop.jpg"
 
-curl -o storage/app/public/item_images/マイク.png "https://coachtech-matter.s3.ap-northeast-1.amazonaws.com/image/Music+Mic+4632231.jpg"
+curl -o src/storage/app/public/item_images/マイク.png "https://coachtech-matter.s3.ap-northeast-1.amazonaws.com/image/Music+Mic+4632231.jpg"
 
-curl -o storage/app/public/item_images/ショルダーバッグ.png "https://coachtech-matter.s3.ap-northeast-1.amazonaws.com/image/Purse+fashion+pocket.jpg"
+curl -o src/storage/app/public/item_images/ショルダーバッグ.png "https://coachtech-matter.s3.ap-northeast-1.amazonaws.com/image/Purse+fashion+pocket.jpg"
 
-curl -o storage/app/public/item_images/タンブラー.png "https://coachtech-matter.s3.ap-northeast-1.amazonaws.com/image/Tumbler+souvenir.jpg"
+curl -o src/storage/app/public/item_images/タンブラー.png "https://coachtech-matter.s3.ap-northeast-1.amazonaws.com/image/Tumbler+souvenir.jpg"
 
-curl -o storage/app/public/item_images/コーヒーミル.png "https://coachtech-matter.s3.ap-northeast-1.amazonaws.com/image/Waitress+with+Coffee+Grinder.jpg"
+curl -o src/storage/app/public/item_images/コーヒーミル.png "https://coachtech-matter.s3.ap-northeast-1.amazonaws.com/image/Waitress+with+Coffee+Grinder.jpg"
 
-curl -o storage/app/public/item_images/メイクセット.png "https://coachtech-matter.s3.ap-northeast-1.amazonaws.com/image/%E5%A4%96%E5%87%BA%E3%83%A1%E3%82%A4%E3%82%AF%E3%82%A2%E3%83%83%E3%83%95%E3%82%9A%E3%82%BB%E3%83%83%E3%83%88.jpg"
+curl -o src/storage/app/public/item_images/メイクセット.png "https://coachtech-matter.s3.ap-northeast-1.amazonaws.com/image/%E5%A4%96%E5%87%BA%E3%83%A1%E3%82%A4%E3%82%AF%E3%82%A2%E3%83%83%E3%83%95%E3%82%9A%E3%82%BB%E3%83%83%E3%83%88.jpg"
 ```
-11.シンボリックリンクの作成
-``` bash
-php artisan storage:link
-```
-
 12. シーディングの実行
 ``` bash
-php artisan db:seed
+docker-compose exec php php artisan db:seed
 ```
 ## 使用技術（実行環境）
 * nginx 1.21.1
