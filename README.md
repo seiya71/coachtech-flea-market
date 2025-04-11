@@ -3,7 +3,8 @@
 **Dockerビルド**
 1. `git clone git@github.com:seiya71/coachtech-flea-market.git`
 2. `cd coachtech-flea-market`
-3. `docker-compose up -d --build`
+3. `mkdir -p docker/mysql/data`
+4. `docker-compose up -d --build`
 > *MacのM1・M2チップのPCの場合、`no matching manifest for linux/arm64/v8 in the manifest list entries`のメッセージが表示されビルドができないことがあります。
 エラーが発生する場合は、docker-compose.ymlファイルの「mysql」内に「platform」の項目を追加で記載してください*
 ``` bash
@@ -25,16 +26,16 @@ DB_DATABASE=laravel_db
 DB_USERNAME=laravel_user
 DB_PASSWORD=laravel_pass
 
-STRIPE_KEY=【Stripeの公開キーをここに入力】
-STRIPE_SECRET=【Stripeの秘密キーをここに入力】
+STRIPE_PUBLIC_KEY=pk_test_51Qlt38LRILPtxq29bpg4uf2EoD5hLJGMmU6Sfbe40fpKfryoGcVt7ck7mojrEYNl1DB3aaWS2YLVXndFzmm4efFN00yYfGrAuM
+STRIPE_SECRET_KEY=sk_test_51Qlt38LRILPtxq29UPrq6N1OS9UD5cahH6c70HQrJlfIbZkzKSGAwl7R15OhRZycuyD8EBojZoLI38cimJQFWurG00joby3YaH
 
 MAIL_MAILER=smtp
-MAIL_HOST=smtp.mailtrap.io
+MAIL_HOST=sandbox.smtp.mailtrap.io
 MAIL_PORT=2525
-MAIL_USERNAME=【Mailtrapのユーザー名をここに入力】
-MAIL_PASSWORD=【Mailtrapのパスワードをここに入力】
+MAIL_USERNAME=8b045afad1fae6
+MAIL_PASSWORD=0ef65a6fa989fd
 MAIL_ENCRYPTION=tls
-MAIL_FROM_ADDRESS=【送信元のメールアドレス】
+MAIL_FROM_ADDRESS=noreply@example.com
 MAIL_FROM_NAME="${APP_NAME}"
 ```
 4. キャッシュをクリア
