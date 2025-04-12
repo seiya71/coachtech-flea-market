@@ -17,7 +17,7 @@
         </div>
         <div class="register-form__group">
             <label class="register-form__label" for="email">メールアドレス</label>
-            <input class="register-form__input" type="email" id="email" name="email" value="{{ old('email') }}">
+            <input class="register-form__input" id="email" name="email" value="{{ old('email') }}">
             @error('email')
                 <p>{{ $message }}</p>
             @enderror
