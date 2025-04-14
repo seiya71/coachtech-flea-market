@@ -47,17 +47,26 @@ docker-compose exec php php artisan cache:clear
 ``` bash
 docker-compose exec php php artisan key:generate
 ```
-6. `docker-compose exec php php artisan storage:link`
+6. 権限の調整（エラー防止のため）
 
-7. マイグレーションの実行
+Laravelの動作に必要な書き込み権限を付与します：
+
+```bash
+docker-compose exec php chmod -R 775 storage
+docker-compose exec php chmod -R 775 bootstrap/cache
+```
+
+7. `docker-compose exec php php artisan storage:link`
+
+8. マイグレーションの実行
 ``` bash
 docker-compose exec php php artisan migrate
 ```
-8. シーディング用の商品画像の配置場所の作成
+9. シーディング用の商品画像の配置場所の作成
 ``` bash
 mkdir -p src/storage/app/public/item_images
 ```
-9. シーディング用の商品画像を設置
+10. シーディング用の商品画像を設置
 
 商品画像を `storage/app/public/item_images/` に保存する必要があります。  
 以下を実行してください。
@@ -82,9 +91,26 @@ curl -o src/storage/app/public/item_images/コーヒーミル.png "https://coach
 
 curl -o src/storage/app/public/item_images/メイクセット.png "https://coachtech-matter.s3.ap-northeast-1.amazonaws.com/image/%E5%A4%96%E5%87%BA%E3%83%A1%E3%82%A4%E3%82%AF%E3%82%A2%E3%83%83%E3%83%95%E3%82%9A%E3%82%BB%E3%83%83%E3%83%88.jpg"
 ```
-12. シーディングの実行
+11. シーディングの実行
 ``` bash
 docker-compose exec php php artisan db:seed
+```
+**テスト環境構築**
+1. `.env.testing.example` を `.env.testing` にコピー
+```bash
+cp src/.env.testing.example src/.env.testing
+```
+2.アプリケーションキーの生成
+```bash
+docker-compose exec php php artisan key:generate --env=testing
+```
+3.テスト用データベースのマイグレーション
+```bash
+docker-compose exec php php artisan migrate --env=testing
+```
+4.テストの実行（必ずこちらのコマンドでテストを実行してください）
+```bash
+docker-compose exec php php artisan test --env=testing
 ```
 ## 使用技術（実行環境）
 * nginx 1.21.1
@@ -100,3 +126,15 @@ docker-compose exec php php artisan db:seed
 ## URL
 - 開発環境：http://localhost/
 - phpMyAdmin：http://localhost:8080/
+- Mailtrap：https://mailtrap.io/inboxes
+### よくあるエラーと対処法
+
+#### 🔸 419 Page Expired が出る
+- `.env`に`APP_KEY`が設定されていない可能性があります。`php artisan key:generate` を実行してください。
+- セッションが正しく保存されていない可能性があります。`SESSION_DRIVER=file` が設定されているか確認してください。
+- キャッシュの不整合があるかもしれません。以下のコマンドを実行してください：
+
+```bash
+php artisan config:clear
+php artisan cache:clear
+```
