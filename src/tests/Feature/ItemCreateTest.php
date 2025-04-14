@@ -22,7 +22,7 @@ class ItemCreateTest extends TestCase
         $category = Category::factory()->create();
 
         $uploadResponse = $this->post('/upload-item-image', [
-            'item_image' => UploadedFile::fake()->image('test_image.png'),
+            'item_image' => UploadedFile::fake()->create('test_image.png', 500),
         ]);
 
         $uploadedImagePath = $uploadResponse->json()['item_image'];

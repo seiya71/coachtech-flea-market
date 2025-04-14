@@ -18,7 +18,7 @@ class CreateItemsTable extends Migration
             $table->string('item_image');
             $table->string('item_name');
             $table->string('brand');
-            $table->text('description');
+            $table->string('description', 255);
             $table->integer('price');
             $table->foreignId('user_id')->constrained();
             $table->string('condition');
