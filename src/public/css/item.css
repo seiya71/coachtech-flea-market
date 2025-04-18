@@ -278,6 +278,7 @@
 textarea {
     width: 100%;
     height: 246px;
+    border: 2px solid #5f5f5f;
 }
 
 .comment-btn {
@@ -301,14 +302,196 @@ textarea {
 
 @media screen and (max-width: 768px) {
     .item-container {
-    transform: scale(0.5);
-    transform-origin: top;
+        margin-top: 48px;
     }
-}
 
-@media screen and (max-width: 480px) {
-    .item-container {
-    transform: scale(0.7);
-    transform-origin: top;
+    .item-box {
+        width: 690px;
+    }
+
+    .left {
+        width: 345px;
+    }
+
+    .right {
+        width: 345px;
+    }
+
+    .item-image {
+        width: 300px;
+        height: 300px;
+        font-size: 20px;
+        margin-top: 18px;
+    }
+
+    .item-data {
+        width: 285px;
+    }
+
+    .item-title {
+        font-size: 23px;
+        height: 39px;
+    }
+
+    .brand-name {
+        font-size: 10px;
+        height: 14px;
+    }
+
+    .price {
+        height: 23px;
+    }
+
+    .price-amount {
+        font-size: 23px;
+    }
+
+    .currency {
+        font-size: 13px;
+    }
+
+    .tax-inclusive {
+        font-size: 13px;
+    }
+
+    .actions {
+        width: 72px;
+        height: 34px;
+        gap: 32px;
+        margin-top: 14px;
+        margin-left: 23px;
+    }
+
+    .status {
+        width: 20px;
+        height: 31px;
+    }
+
+    .status-img {
+        width: 20px;
+        height: 20px;
+    }
+
+    .status-count {
+        height: 11px;
+        font-size: 9px;
+    }
+
+    .buy-btn {
+        height: 28px;
+        padding: 5px 10px;
+        font-size: 15px;
+        margin: 11px 0px;
+    }
+
+    .item-description {
+        width: 285px;
+        height: 161px;
+    }
+
+    .item-heading {
+        width: 230px;
+        height: 37px;
+        font-size: 18px;
+    }
+
+    .describe {
+        width: 230px;
+        height: 124px;
+    }
+
+    .item-detail {
+        width: 280px;
+        height: 115px;
+    }
+
+    .detail-heading {
+        width: 280px;
+        height: 50px;
+        font-size: 18px;
+    }
+
+    .item-category {
+        height: 15px;
+    }
+
+    .item-info__list {
+        font-size: 12px;
+        margin-right: 30px;
+    }
+
+    .item-info__category {
+        font-size: 10px;
+        width: 51px;
+    }
+
+    .item-info {
+        height: 50px;
+    }
+
+    .item-info__status {
+        font-size: 10px;
+    }
+
+    .comments {
+        width: 285px;
+    }
+
+    .comments-heading {
+        height: 50px;
+        font-size: 18px;
+    }
+
+    .comment {
+        width: 285px;
+    }
+
+    .comment-item {
+        width: 285px;
+        height: 100px;
+    }
+
+    .comment-user__img {
+        width: 35px;
+        height: 35px;
+        margin-right: 9px;
+    }
+
+    .comment-user__name {
+        width: 241px;
+        height: 35px;
+        font-size: 15px;
+    }
+
+    .comment-text {
+        width: 285px;
+        height: 35px;
+        margin-top: 10px;
+        padding: 0 8px;
+        font-size: 10px;
+    }
+
+    .comment-edit {
+        width: 285px;
+        height: 211px;
+    }
+
+    .edit-title {
+        height: 25px;
+        font-size: 14px;
+    }
+
+    .comment-area {
+        height: 197px;
+    }
+
+    textarea {
+        height: 123px;
+    }
+
+    .comment-btn {
+        margin-top: 24px;
+        height: 28px;
+        font-size: 13px;
     }
 }
