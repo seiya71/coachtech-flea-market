@@ -11,15 +11,14 @@
         <form class="img-form" action="{{ route('updateUserImage') }}" method="POST" enctype="multipart/form-data">
             @csrf
             <div class="profile-image">
-                <div class="img">
-                    <img src="{{ session('profile_image') ? asset('storage/' . session('profile_image')) : asset('storage/' . Auth::user()->profile_image) }}"
-                        alt="Profile Image">
-
-                </div>
+                <img class="img" src="{{ session('profile_image') ? asset('storage/' . session('profile_image')) : asset('storage/' . Auth::user()->profile_image) }}"
+                    alt="Profile Image">
             </div>
-            <label class="img-button" for="profile_image" class="img-button">画像を選択する</label>
-            <input class="img-label" type="file" name="profile_image" id="profile_image" accept="image/*"
-                onchange="this.form.submit()">
+            <div class="edit-button">
+                <label class="img-button" for="profile_image" class="img-button">画像を選択する</label>
+                <input class="img-label" type="file" name="profile_image" id="profile_image" accept="image/*"
+                    onchange="this.form.submit()">
+            </div>
         </form>
 
         <form class="address-form" action="{{ route('edit') }}" method="POST">
