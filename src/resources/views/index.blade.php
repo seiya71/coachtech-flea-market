@@ -10,24 +10,21 @@
         <li class="tab"><a href="{{ url('/?tab=mylist') }}"
                 class="tab-text {{ $tab == 'mylist' ? 'active' : '' }}">マイリスト</a></li>
     </ul>
-
-
-
     <div class="item-box">
         @if ($tab == 'all')
             <div class="item-list">
                 @foreach ($items as $item)
                     @if ($item)
-                        <div class="item">
+                        <a class="item" href="{{ url('/item', $item->id) }}">
                             @if ($item->sold)
                                 <div class="item-image">Sold</div>
                             @else
                                 <img class="item-image" src="{{ asset('storage/' . $item->item_image) }}" alt="商品画像">
                             @endif
-                            <a class="item-name" href="{{ url('/item', $item->id) }}">
-                                <h3>{{ $item->item_name }}</h3>
-                            </a>
-                        </div>
+                            <p class="item-name">
+                                {{ $item->item_name }}
+                            </p>
+                        </a>
                     @endif
                 @endforeach
             </div>
@@ -42,16 +39,16 @@
                 <div class="item-list">
                     @foreach ($myitems as $item)
                         @if ($item)
-                            <div class="item">
+                            <a class="item" href="{{ url('/item', $item->id) }}">
                                 @if ($item->sold)
                                     <div class="item-image">Sold</div>
                                 @else
                                     <img class="item-image" src="{{ asset('storage/' . $item->item_image) }}" alt="商品画像">
                                 @endif
-                                <a class="item-name" href="{{ url('/item', $item->id) }}">
-                                    <h3>{{ $item->item_name }}</h3>
-                                </a>
-                            </div>
+                                <p class="item-name">
+                                    {{ $item->item_name }}
+                                </p>
+                            </a>
                         @endif
                     @endforeach
                 </div>
@@ -61,5 +58,4 @@
             @endif
         @endif
     </div>
-
 @endsection

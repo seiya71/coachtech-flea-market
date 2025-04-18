@@ -5,6 +5,9 @@ main {
     align-items: center;
 }
 
+.profile-edit__container {
+}
+
 .address-title {
     font-size: 24px;
     margin: 0px;
@@ -115,36 +118,15 @@ input[type="file"] {
 }
 
 @media screen and (max-width: 768px) {
-    .address-form {
-        width: 90%;
-    }
-
-    .address-button {
-        width: 100%;
+    .profile-edit__container {
+        transform: scale(0.9);
+        transform-origin: top;
     }
 }
 
 @media screen and (max-width: 480px) {
-    .address-title {
-        font-size: 20px;
-        margin-bottom: 30px;
-    }
-
-    .address-form {
-        gap: 10px;
-    }
-
-    .address-form__label {
-        font-size: 12px;
-    }
-
-    .address-form__input {
-        font-size: 14px;
-        padding: 8px;
-    }
-
-    .address-button {
-        padding: 8px;
-        font-size: 14px;
+    .profile-edit__container {
+        transform: scale(0.6);
+        transform-origin: top;
     }
 }

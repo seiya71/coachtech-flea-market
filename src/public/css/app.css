@@ -6,7 +6,7 @@
 
 body {
     font-family: Arial, sans-serif;
-    background-color: #fff;
+    background-color: #ffffff;
     width: 1515px;
     margin: 0 auto;
 }
@@ -16,7 +16,7 @@ body {
     justify-content: space-between;
     align-items: center;
     background-color: #000000;
-    color: white;
+    color: #ffffff;
     min-height: 80px;
     gap: 5px;
 }
@@ -43,7 +43,7 @@ body {
     height: 50px;
     font-size: 24px;
     border-radius: 5px;
-    color: black;
+    color: #000000;
 }
 
 .nav {
@@ -65,9 +65,10 @@ body {
 .nav-logout__link {
     background: none;
     border: none;
-    color: white;
+    color: #ffffff;
     text-decoration: none;
     cursor: pointer;
+    font-size: 24px;
 }
 
 .nav-mypage {
@@ -75,7 +76,7 @@ body {
     justify-content: center;
     align-items: center;
     font-size: 24px;
-    color: white;
+    color: #ffffff;
     text-decoration: none;
     width: 135px;
 }
@@ -83,7 +84,7 @@ body {
 .nav-sell__btn {
     display: inline-block;
     background-color: #fff;
-    color: black;
+    color: #000000;
     text-decoration: none;
     border-radius: 5px;
     text-align: center;
@@ -105,55 +106,60 @@ li.page-item.disabled::marker {
 @media screen and (max-width: 768px) {
     body {
         width: 768px;
-        }
-    
-        .header {
+    }
+
+    .header {
         min-height: 40px;
         gap: 2px;
-        }
-    
-        .logo {
+    }
+
+    .logo {
         width: 240px;
-        }
-    
-        .logo-img {
+    }
+
+    .logo-img {
         width: 185px;
-        }
-    
-        .search {
+    }
+
+    .search {
         width: 280px;
-        }
-    
-        .search-input {
+    }
+
+    .search-input {
         width: 250px;
         height: 25px;
         font-size: 12px;
-        }
-    
-        .nav {
+    }
+
+    .nav {
         width: 230px;
         gap: 5px;
-        }
-    
-        .nav-logout {
+    }
+
+    .nav-logout {
         width: 68px;
         font-size: 12px;
-        }
-    
-        .nav-mypage {
-            font-size: 12px;
-            width: 68px;
-        }
-    
-        .nav-sell__btn {
-            font-size: 12px;
-            width: 50px;
-            height: 25px;
-        }
-    
-        .pagination {
-            gap: 5px;
-        }
+    }
+
+    .nav-logout__link {
+    font-size: 12px;
+    }
+
+
+    .nav-mypage {
+        font-size: 12px;
+        width: 68px;
+    }
+
+    .nav-sell__btn {
+        font-size: 12px;
+        width: 50px;
+        height: 25px;
+    }
+
+    .pagination {
+        gap: 5px;
+    }
 }
 
 @media screen and (max-width: 480px) {
@@ -192,6 +198,10 @@ li.page-item.disabled::marker {
     .nav-logout {
         width: 41px;
         font-size: 7px;
+    }
+
+    .nav-logout__link {
+    font-size: 7px;
     }
 
     .nav-mypage {
