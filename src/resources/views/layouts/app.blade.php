@@ -13,12 +13,12 @@
     <header class="header">
         <div class="logo">
             <a href="{{ route('home') }}">
-                <img src="{{ asset('images/icons/logo.svg') }}" alt="Coachtech Icon">
+                <img class="logo-img" src="{{ asset('images/icons/logo.svg') }}" alt="Coachtech Icon">
             </a>
         </div>
         @if (!Request::is('login') && !Request::is('register'))
             <form class="search" action="{{ route('home') }}" method="get">
-                <input type="search" name="search" placeholder="       なにをお探しですか？" value="{{ $query ?? '' }}" />
+                <input class="search-input" type="search" name="search" placeholder="       なにをお探しですか？" value="{{ $query ?? '' }}" />
                 <input type="hidden" name="tab" value="{{ $tab ?? 'all' }}">
             </form>
             <div class="nav">
