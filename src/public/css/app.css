@@ -6,51 +6,51 @@
 
 body {
     font-family: Arial, sans-serif;
-    background-color: #fff;
-    max-width: 1920px;
-    min-width: 1100px;
+    background-color: #ffffff;
+    width: 1515px;
+    margin: 0 auto;
 }
 
 .header {
     display: flex;
     justify-content: space-between;
     align-items: center;
-    background-color: #000;
-    color: white;
-    padding: 10px 20px;
-    height: 65px;
+    background-color: #000000;
+    color: #ffffff;
+    min-height: 80px;
+    gap: 5px;
 }
 
 .logo {
     display: flex;
-    align-items: center;
-    margin: 0px;
-    padding: 0px 20px;
+    justify-content: center;
+    width: 479px;
 }
 
 .logo-img {
-    max-height: 50px;
+    width: 370px;
+    height: auto;
 }
 
 .search {
     display: flex;
     justify-content: center;
-    flex-basis: 45%;
-    margin: 10px 60px;
-    padding: 0px;
+    width: 563px;
 }
 
-.search input {
-    width: 100%;
-    aspect-ratio: 15 / 1;
-    padding: 0px;
-    font-size: 16px;
+.search-input {
+    width: 500px;
+    height: 50px;
+    font-size: 24px;
+    border-radius: 5px;
+    color: #000000;
 }
 
 .nav {
     display: flex;
-    justify-content: space-between;
+    justify-content: center;
     align-items: center;
+    width: 463px;
     gap: 30px;
 }
 
@@ -58,38 +58,39 @@ body {
     display: flex;
     justify-content: center;
     align-items: center;
-    font-size: 16px;
+    width: 135px;
+    font-size: 24px;
 }
 
 .nav-logout__link {
-    font-size: 16px;
     background: none;
     border: none;
-    color: white;
+    color: #ffffff;
     text-decoration: none;
     cursor: pointer;
+    font-size: 24px;
 }
 
 .nav-mypage {
     display: flex;
     justify-content: center;
     align-items: center;
-    font-size: 16px;
-    color: white;
+    font-size: 24px;
+    color: #ffffff;
     text-decoration: none;
+    width: 135px;
 }
 
 .nav-sell__btn {
     display: inline-block;
     background-color: #fff;
-    color: black;
+    color: #000000;
     text-decoration: none;
     border-radius: 5px;
     text-align: center;
-    font-size: 16px;
+    font-size: 24px;
     width: 100px;
     height: 50px;
-    line-height: 50px;
 }
 
 .pagination {
@@ -104,60 +105,117 @@ li.page-item.disabled::marker {
 
 @media screen and (max-width: 768px) {
     body {
-        max-width: 850px;
-        min-width: 768px;
+        width: 768px;
     }
 
     .header {
-        flex-direction: column;
-        height: auto;
-        padding: 15px 10px;
+        min-height: 40px;
+        gap: 2px;
+    }
+
+    .logo {
+        width: 240px;
+    }
+
+    .logo-img {
+        width: 185px;
     }
 
     .search {
-        margin: 10px 0;
-        flex-basis: 100%;
+        width: 280px;
+    }
+
+    .search-input {
+        width: 250px;
+        height: 25px;
+        font-size: 12px;
     }
 
     .nav {
+        width: 230px;
         gap: 5px;
-        font-size: 14px;
+    }
+
+    .nav-logout {
+        width: 68px;
+        font-size: 12px;
+    }
+
+    .nav-logout__link {
+    font-size: 12px;
+    }
+
+
+    .nav-mypage {
+        font-size: 12px;
+        width: 68px;
     }
 
     .nav-sell__btn {
-        font-size: 14px;
-        width: 70px;
-        height: 35px;
-        line-height: 35px;
+        font-size: 12px;
+        width: 50px;
+        height: 25px;
+    }
+
+    .pagination {
+        gap: 5px;
     }
 }
 
 @media screen and (max-width: 480px) {
     body {
-        max-width: 480px;
-        min-width: 350px;
+        width: 480px;
     }
 
     .header {
-        flex-direction: column;
-        height: auto;
-        padding: 15px 10px;
+        min-height: 24px;
+        gap: 2px;
+    }
+
+    .logo {
+        width: 144px;
+    }
+
+    .logo-img {
+        width: 111px;
     }
 
     .search {
-        margin: 10px 0;
-        flex-basis: 100%;
+        width: 168px;
+    }
+
+    .search-input {
+        width: 150px;
+        height: 15px;
+        font-size: 7px;
     }
 
     .nav {
-        gap: 5px;
-        font-size: 14px;
+        width: 138px;
+        gap: 3px;
+    }
+
+    .nav-logout {
+        width: 41px;
+        font-size: 7px;
+    }
+
+    .nav-logout__link {
+    font-size: 7px;
+    }
+
+    .nav-mypage {
+        font-size: 7px;
+        width: 41px;
     }
 
     .nav-sell__btn {
-        font-size: 14px;
-        width: 70px;
-        height: 35px;
-        line-height: 35px;
+        font-size: 7px;
+        width: 30px;
+        height: 15px;
+    }
+
+    .pagination {
+        gap: 3px;
     }
 }

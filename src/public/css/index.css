@@ -1,73 +1,72 @@
-main {
-    margin: auto;
-}
-
 .tab-menu {
     display: flex;
-    border-bottom: 1px solid black;
+    border-bottom: 2px solid #5f5f5f;
     width: 100%;
-    margin: 20px 0px;
-    padding: 0px 200px;
+    height: 47px;
+    margin-top: 47px;
+    padding-left: 129px;
 }
 
 .tab {
     display: flex;
-    justify-content: start;
-    width: 150px;
+    justify-content: end;
+    width: 155px;
     height: 40px;
-    color: black;
-    align-items: flex-end;
+    align-items: center;
+    margin-right: 52px;
 }
 
-
 .tab-text {
-    color: black;
+    color: #5f5f5f;
     text-decoration: none;
-    font-weight: bold;
+    font-size: 24px;
 }
 
 .tab-text.active {
-    color: red !important;
+    color: #ff0000;
 }
 
 .item-box {
     display: flex;
     flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    width: 100%;
+    margin-top: 76px;
 }
 
 .item-list {
     display: flex;
-    justify-content: center;
-    align-items: flex-start;
-    padding: 30px;
+    width: 1375px;
     margin-bottom: 20px;
     flex-wrap: wrap;
+    gap: 70px;
 }
 
 .item {
-    text-align: center;
-    margin: 40px;
-    flex: 0 0 auto;
-    box-sizing: border-box;
+    width: 290px;
+    height: 320px;
+    margin: 0;
+    padding: 0;
+    text-decoration: none;
+    color: #000000;
 }
 
 .item-image {
     width: 290px;
     height: 290px;
-    background-color: #ccc;
+    background-color: #d9d9d9;
     display: flex;
     justify-content: center;
     align-items: center;
-    font-size: 0.5rem;
-    margin-bottom: 10px;
+    font-size: 40px;
 }
 
 .item-name {
     display: flex;
     justify-content: flex-start;
-    font-size: 1.5rem;
-    text-decoration: none;
-    color: black;
+    font-size: 25px;
+    color: #000000;
 }
 
 .pagination {
@@ -75,6 +74,7 @@ main {
     text-align: center;
     text-decoration: none;
     list-style: none;
+    color: #000000;
 }
 
 div.hidden.sm:flex-1.sm:flex.sm:items-center.sm:justify-between {
@@ -82,73 +82,87 @@ div.hidden.sm:flex-1.sm:flex.sm:items-center.sm:justify-between {
 }
 
 @media (max-width: 768px) {
-
     .tab-menu {
-        margin: 0px;
-        padding: 0px 20px;
+        height: 24px;
+        margin-top: 24px;
+        padding-left: 65px;
     }
 
     .tab {
-        margin: 0px 0;
+        width: 77px;
+        height: 20px;
+        margin-right: 26px;
+    }
+
+    .tab-text {
+        font-size: 12px;
+    }
+
+    .item-box {
+        margin-top: 38px;
     }
 
     .item-list {
-        display: flex;
-        justify-content: center;
-        flex-wrap: wrap;
-        gap: 20px;
+        width: 688px;
+        margin-bottom: 10px;
+        gap: 35px;
     }
 
-
     .item {
-        margin: 20px 0;
-        flex: 0 0 48%;
-        box-sizing: border-box;
-        text-align: center;
+        width: 145px;
+        height: 160px;
     }
 
     .item-image {
-        width: 200px;
-        height: 200px;
-        font-size: 0.5rem;
-        margin: 0 auto;
+        width: 145px;
+        height: 145px;
+        font-size: 20px;
     }
 
     .item-name {
-        font-size: 1rem;
-        padding: 10px 70px;
+        font-size: 13px;
     }
 }
 
 @media (max-width: 480px) {
     .tab-menu {
-        padding: 0px 20px;
+        height: 15px;
+        margin-top: 15px;
+        padding-left: 39px;
+    }
+
+    .tab {
+        width: 46px;
+        height: 12px;
+        margin-right: 17px;
+    }
+
+    .tab-text {
+        font-size: 7px;
+    }
+
+    .item-box {
+        margin-top: 23px;
     }
 
     .item-list {
-        display: flex;
-        justify-content: center;
-        flex-wrap: wrap;
-        gap: 10px;
+        width: 413px;
+        margin-bottom: 6px;
+        gap: 21px;
     }
 
     .item {
-        flex: 0 0 40%;
-        box-sizing: border-box;
-        text-align: center;
-        margin: 10px 10px 0;
+        width: 87px;
+        height: 96px;
     }
 
     .item-image {
-        width: 100px;
-        height: 100px;
-        font-size: 0.2rem;
-        margin: 0 auto;
+        width: 87px;
+        height: 87px;
+        font-size: 12px;
     }
 
     .item-name {
-        font-size: 0.75rem;
-        width: 100%;
-        padding: 0px 15px;
+        font-size: 8px;
     }
 }
