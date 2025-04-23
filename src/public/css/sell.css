@@ -1,29 +1,35 @@
-main {
+.sell-container {
     display: flex;
     flex-direction: column;
     justify-content: center;
     align-items: center;
+    width: 1515px;
+    margin-top: 51px;
 }
 
 .sell-title {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    width: 180px;
+    height: 44px;
     font-size: 36px;
-    margin: 30px;
-    font-weight: bold;
+    font-weight: 700;
 }
 
 .item-image {
     display: flex;
     flex-direction: column;
     width: 680px;
-    height: 190px;
-    margin: 30px;
+    height: 186px;
+    margin-top: 44px;
 }
 
 .item-image__title {
-    text-align: left;
     width: 100%;
+    height: 36px;
     font-size: 24px;
-    font-weight: bold;
+    font-weight: 700;
 }
 
 .item-image__upload {
@@ -32,17 +38,17 @@ main {
     align-items: center;
     width: 100%;
     height: 150px;
-    border: 2px dotted #ccc;
-    border-radius: 5px;
+    border: 1px dotted #5f5f5f;
+    border-radius: 4px;
 }
 
 .preview-image {
-    width: 145px;
-    height: 145px;
-    background-color: #ccc;
     display: flex;
     align-items: center;
     justify-content: center;
+    width: 145px;
+    height: 145px;
+    background-color: #5f5f5f;
     overflow: hidden;
 }
 
@@ -52,18 +58,26 @@ main {
     object-fit: cover;
 }
 
+.button-box {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    width: 165px;
+    height: 145px;
+}
+
 .upload-button {
     display: flex;
     justify-content: center;
     align-items: center;
-    border: 2px solid #ff5c5c;
-    color: #ff5c5c;
-    border-radius: 8px;
+    border: 2px solid #ff5555;
+    color: #ff5555;
+    border-radius: 10px;
     text-decoration: none;
     width: 165px;
     height: 44px;
     font-size: 16px;
-    font-weight: bold;
+    font-weight: 700;
     cursor: pointer;
 }
 
@@ -72,8 +86,8 @@ main {
 }
 
 .upload-button:hover {
-    background-color: #ff5c5c;
-    color: #fff;
+    background-color: #ff5555;
+    color: #ffffff;
 }
 
 input[type="file"] {
@@ -85,38 +99,39 @@ input[type="file"] {
     height: auto;
     display: flex;
     flex-direction: column;
-    margin: 30px;
+    margin-top: 70px;
 }
 
 .item-detail__title {
     width: 100%;
     height: 48px;
-    text-align: left;
     font-size: 30px;
-    font-weight: bold;
-    border-bottom: 2px solid #ccc;
+    font-weight: 700;
+    border-bottom: 1px solid #5f5f5f;
+    margin-bottom: 36px;
 }
 
 .item-category {
     display: flex;
     flex-direction: column;
     width: 100%;
-    height: 235px;
-    margin: 10px;
+    height: auto;
 }
 
 .category-title {
-    text-align: left;
+    width: 100%;
+    height: 36px;
     font-size: 24px;
-    font-weight: bold;
-    margin: 30px 0px;
+    font-weight: 700;
+    margin-bottom: 36px;
 }
 
 .category-value {
     display: flex;
     flex-wrap: wrap;
     width: 100%;
-    height: auto;
+    height: 199px;
+    gap: 19px;
 }
 
 .category-button input[type="checkbox"] {
@@ -124,55 +139,73 @@ input[type="file"] {
 }
 
 .category-button {
-    display: inline-flex;
+    display: flex;
     align-items: center;
     justify-content: center;
-    border: 2px solid #ff5c5c;
-    background-color: #fff;
-    color: #ff5c5c;
+    border: 2px solid #ff5655;
+    background-color: #ffffff;
+    color: #ff5655;
     text-decoration: none;
     border-radius: 16px;
     height: 32px;
-    font-size: 15px;
     cursor: pointer;
-    margin: 8px;
+    margin: 0px;
 }
 
-.category-button span {
-    width: 100%;
-    height: 100%;
+.category-name {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    font-size: 15px;
+    font-weight: 500;
     border-radius: 16px;
-    padding: 0 15px;
+    height: 32px;
+    padding: 15px;
 }
 
-.category-button input[type="checkbox"]:checked+span {
-    background-color: #ff5c5c;
-    color: #fff;
+.category-button input[type="checkbox"]:checked + span {
+    background-color: #ff5555;
+    color: #ffffff;
 }
 
 .category-button:hover {
-    background-color: #ff5c5c;
-    color: #fff;
+    background-color: #ff5555;
+    color: #ffffff;
 }
 
-
 .item-condition {
-    width: 100%;
-    margin: 30px 0px;
+    display: flex;
+    flex-direction: column;
+    width: 680px;
+    height: 93px;
+    margin-top: 65px;
 }
 
 .item-condition__title {
-    text-align: left;
+    width: 120;
+    height: 29px;
     font-size: 24px;
-    font-weight: bold;
-    margin: 30px 0px;
+    font-weight: 700;
 }
 
 .item-condition__select {
     width: 100%;
     height: 45px;
     font-size: 16px;
-    padding: 0px 10px;
+    font-weight: 700;
+    padding-left: 15px;
+    border: 1.5px solid #b1b1b1;
+    margin-top: 19px;
+}
+
+.select-value {
+    display: flex;
+    align-items: center;
+    margin-left: 38px;
+    background-color: #636769;
+    color: #eaeaea;
+    font-size: 14px;
+    font-weight: 600;
 }
 
 .item-description {
@@ -180,47 +213,203 @@ input[type="file"] {
     height: auto;
     display: flex;
     flex-direction: column;
-    margin: 30px;
+    margin-top: 69px;
+}
+
+.item-description__title {
+    width: 100%;
+    height: 46px;
+    color: #5f5f5f;
+    border-bottom: 1px solid #5f5f5f;
+    font-size: 30px;
+    font-weight: 700;
 }
 
 .form-group {
-    margin-bottom: 15px;
+    margin-top: 36px;
+    gap: 7px;
 }
 
-label {
-    display: block;
-    margin-top: 20px;
-    font-size: 24px;
-    font-weight: bold;
-}
-
-input,
-textarea,
-select {
+.description-label {
     width: 100%;
-    padding: 10px;
-    border: 1px solid #ccc;
-    border-radius: 5px;
-    font-size: 14px;
+    height: 29px;
+    font-size: 24px;
+    font-weight: 700;
+    color: #000000;
 }
 
-textarea {
-    height: 100px;
+.description-input {
+    width: 100%;
+    height: 45px;
+    border: 1px solid #5f5f5f;
+    border-radius: 4px;
+    padding-left: 12px;
+}
+
+.description-textarea {
+    width: 100%;
+    height: 125px;
     resize: none;
+    border: 1px solid #5f5f5f;
+    border-radius: 4px;
+}
+
+.description-input::placeholder {
+    font-size: 24px;
+    font-weight: 700;
+    color: #000000;
 }
 
 .sell-btn {
-    display: block;
+    display: flex;
+    justify-content: center;
+    align-items: center;
     width: 100%;
-    background-color: #ff5c5c;
-    color: white;
-    border: none;
-    padding: 10px 0;
-    font-size: 16px;
+    height: 60px;
+    background-color: #ff5555;
+    font-size: 26px;
+    font-weight: 700;
     border-radius: 5px;
-    cursor: pointer;
+    margin-top: 118px;
+    border: none;
+    color: #ffffff;
 }
 
 .sell-btn:hover {
     background-color: #e14b4b;
+}
+
+@media screen and (max-width: 768px) {
+    .sell-container {
+        width: 768px;
+        margin-top: 25px;
+    }
+
+    .sell-title {
+        width: 90px;
+        height: 22px;
+        font-size: 18px;
+    }
+
+    .item-image {
+        width: 340px;
+        height: 93px;
+        margin-top: 22px;
+    }
+
+    .item-image__title {
+        height: 18px;
+        font-size: 12px;
+    }
+
+    .item-image__upload {
+        height: 75px;
+    }
+
+    .preview-image {
+        width: 73px;
+        height: 73px;
+    }
+
+    .upload-button {
+        width: 83px;
+        height: 22px;
+        font-size: 8px;
+    }
+
+    .item-detail {
+        width: 340px;
+        margin-top: 35px;
+    }
+
+    .item-detail__title {
+        height: 24px;
+        font-size: 15px;
+        margin-bottom: 18px;
+    }
+
+    .category-title {
+        height: 18px;
+        font-size: 12px;
+        margin-bottom: 18px;
+    }
+
+    .category-value {
+        height: 100px;
+        gap: 10px;
+    }
+
+    .category-button {
+        height: 16px;
+    }
+
+    .category-name {
+        font-size: 8px;
+        border-radius: 8px;
+        height: 16px;
+        padding: 8px;
+    }
+
+    .item-condition {
+        width: 340px;
+        height: 47px;
+        margin-top: 33px;
+    }
+
+    .item-condition__title {
+        width: 60;
+        height: 15px;
+        font-size: 12px;
+    }
+
+    .item-condition__select {
+        height: 23px;
+        font-size: 8px;
+        padding-left: 8px;
+        margin-top: 10px;
+    }
+
+    .select-value {
+        margin-left: 19px;
+        font-size: 7px;
+    }
+
+    .item-description {
+        width: 340px;
+        margin-top: 35px;
+    }
+
+    .item-description__title {
+        height: 23px;
+        font-size: 15px;
+    }
+
+    .form-group {
+        margin-top: 18px;
+        gap: 4px;
+    }
+
+    .description-label {
+        height: 15px;
+        font-size: 12px;
+    }
+
+    .description-input {
+        height: 23px;
+        padding-left: 6px;
+    }
+
+    .description-textarea {
+        height: 63px;
+    }
+
+    .description-input::placeholder {
+        font-size: 12px;
+    }
+
+    .sell-btn {
+        height: 30px;
+        font-size: 13px;
+        margin-top: 59px;
+    }
 }

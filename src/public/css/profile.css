@@ -1,34 +1,36 @@
-main {
-    margin: auto;
+.profile-container {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    width: 1515px;
 }
 
 .user-data {
     display: flex;
     flex-wrap: wrap;
     align-items: center;
-    height: 200px;
+    width: 1017px;
+    height: 150px;
+    margin-top: 78px;
 }
 
 .profile-image {
-    flex: 1 1 30px;
     display: flex;
-    justify-content: flex-end;
+    justify-content: center;
     align-items: center;
-    padding: 0px 40px 0px 0px;
+    width: 150px;
+    height: 150px;
 }
 
 .img {
-    background-color: #ccc;
+    background-color: #d9d9d9;
     border-radius: 50%;
-    width: 120px;
-    height: 120px;
-    display: flex;
-    align-items: center;
-    justify-content: center;
+    width: 100%;
+    height: 100%;
     overflow: hidden;
 }
 
-.img img {
+.user-image {
     width: 100%;
     height: 100%;
     object-fit: cover;
@@ -36,107 +38,177 @@ main {
 }
 
 .user-name {
-    flex: 1 1 30px;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    width: 250px;
+    height: 65px;
     font-size: 36px;
-    font-weight: bold;
+    font-weight: 700;
+    margin-left: 57px;
 }
 
 .profile-edit__link {
-    display: flex;
-    align-items: center;
-    flex: 1 1 30px;
-    height: 80px;
+    width: 310px;
+    height: 59px;
+    margin-left: 250px;
 }
 
 .edit-btn {
     display: flex;
     justify-content: center;
     align-items: center;
-    border: 2px solid #ff5c5c;
-    color: #ff5c5c;
+    border: 2px solid #ff5555;
+    color: #ff5555;
     text-decoration: none;
     font-weight: bold;
-    width: 360px;
-    height: 60px;
+    width: 100%;
+    height: 100%;
     font-size: 26px;
-    border-radius: 8px;
+    border-radius: 10px;
 }
 
 .edit-btn:hover {
-    background-color: #ff5c5c;
+    background-color: #ff5555;
     color: white;
 }
 
 .tab-menu {
     display: flex;
-    border-bottom: 1px solid black;
+    border-bottom: 1px solid #000000;
     width: 100%;
-    margin: 20px 0px;
-    padding: 0px 200px;
+    height: 47px;
+    margin-top: 77px;
+}
+
+.tab-box {
+    display: flex;
+    justify-content: space-between;
+    width: 362px;
+    margin-left: 129px;
 }
 
 .tab {
     display: flex;
-    justify-content: start;
-    width: 150px;
+    justify-content: center;
+    align-items: center;
+    width: 155px;
     height: 40px;
     text-decoration: none;
-    color: black;
-    align-items: flex-end;
+    color: #5f5f5f;
+    font-weight: 700;
+    font-size: 24px;
 }
 
-
 .tab.active {
-    color: red;
+    color: #ff0000;
 }
 
 .item-list {
     display: flex;
-    justify-content: center;
-    align-items: flex-start;
-    padding: 30px;
     flex-wrap: wrap;
+    gap: 70px;
+    width: 1375px;
+    margin-top: 59px;
 }
 
 .item {
-    text-align: center;
-    margin: 40px;
-    flex: 0 0 auto;
-    box-sizing: border-box;
+    width: 290px;
+    height: 320px;
+    margin: 0;
+    padding: 0;
+    text-decoration: none;
+    color: #000000;
 }
 
 .item-image {
     width: 290px;
     height: 290px;
-    background-color: #ccc;
+    background-color: #d9d9d9;
     display: flex;
     justify-content: center;
     align-items: center;
-    font-size: 2.5rem;
-    margin-bottom: 10px;
-    color: black;
-    font-weight: bold
+    font-size: 40px;
 }
 
 .item-name {
     display: flex;
     justify-content: flex-start;
-    font-size: 1.5rem;
+    font-size: 25px;
     text-decoration: none;
-    color: black;
-    font-weight: bold;
+    color: #000000;
+    font-weight: 400;
+    width: 100%;
 }
 
 @media screen and (max-width: 768px) {
     .profile-container {
-        transform: scale(0.5);
-        transform-origin: top;
+        width: 768px;
     }
-}
 
-@media screen and (max-width: 480px) {
-    .profile-container {
-        transform: scale(0.5);
-        transform-origin: top;
+    .user-data {
+        width: 508px;
+        height: 75px;
+        margin-top: 38px;
+    }
+
+    .profile-image {
+        width: 75px;
+        height: 75px;
+    }
+
+    .user-name {
+        width: 125px;
+        height: 33px;
+        font-size: 18px;
+        font-weight: 700;
+        margin-left: 28px;
+    }
+
+    .profile-edit__link {
+        width: 155px;
+        height: 30px;
+        margin-left: 125px;
+    }
+
+    .edit-btn {
+        font-size: 13px;
+    }
+
+    .tab-menu {
+        height: 28px;
+        margin-top: 38px;
+    }
+
+    .tab-box {
+        width: 181px;
+        margin-left: 65px;
+    }
+
+    .tab {
+        width: 78px;
+        height: 20px;
+        font-size: 12px;
+    }
+
+    .item-list {
+        gap: 35px;
+        width: 688px;
+        margin-top: 30px;
+    }
+
+    .item {
+        width: 145px;
+        height: 160px;
+    }
+
+    .item-image {
+        width: 145px;
+        height: 145px;
+        font-size: 20px;
+    }
+
+    .item-name {
+        font-size: 13px;
     }
 }
