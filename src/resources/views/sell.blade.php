@@ -16,13 +16,12 @@
                         <img src="{{ asset('storage/' . session('item_image')) }}" alt="商品画像">
                     </div>
                 @endif
-                <div class="form-group">
+                <div class="button-box">
                     <label class="upload-button" for="item_image">画像を選択する</label>
                     <input class="img-label" type="file" name="item_image" id="item_image" accept="image/*"
                         onchange="this.form.submit()">
                 </div>
             </div>
-
         </form>
         <form action="{{ route('sell') }}" method="POST">
             @csrf
@@ -34,10 +33,10 @@
                         @foreach($categories as $category)
                                                 <label class="category-button">
                                                     <input type="checkbox" name="categories[]" value="{{ $category->id }}" {{ in_array(
-                                $category->id,
-                                old('categories', [])
-                            ) ? 'checked' : '' }}>
-                                                    <span>{{ $category->category_name }}</span>
+        $category->id,
+        old('categories', [])
+    ) ? 'checked' : '' }}>
+                                                    <span class="category-name">{{ $category->category_name }}</span>
                                                 </label>
                         @endforeach
                     </div>
@@ -45,29 +44,31 @@
                 <div class="item-condition">
                     <p class="item-condition__title">商品の状態</p>
                     <select class="item-condition__select" name="condition" id="condition">
-                        <option value="選択してください">選択してください</option>
-                        <option value="良好">良好</option>
-                        <option value="目立った傷や汚れなし">目立った傷や汚れなし</option>
-                        <option value="やや傷や汚れあり">やや傷や汚れあり</option>
-                        <option value="状態が悪い">状態が悪い</option>
+                        <option class="select-value" value="選択してください">選択してください</option>
+                        <option class="select-value" value="良好">良好</option>
+                        <option class="select-value" value="目立った傷や汚れなし">目立った傷や汚れなし</option>
+                        <option class="select-value" value="やや傷や汚れあり">やや傷や汚れあり</option>
+                        <option class="select-value" value="状態が悪い">状態が悪い</option>
                     </select>
                 </div>
             </div>
             <div class="item-description">
-                <h2 class="item-detail__title">商品名と説明</h2>
+                <h2 class="item-description__title">商品名と説明</h2>
                 <div class="form-group">
-                    <label for="item-name">商品名</label>
-                    <input type="text" id="item-name" name="item_name" required>
-                    <label for="brand">ブランド</label>
-                    <input type="text" id="brand" name="brand" required>
+                    <label class="description-label" for="item-name">商品名</label>
+                    <input class="description-input" type="text" id="item-name" name="item_name" required>
                 </div>
                 <div class="form-group">
-                    <label for="description">商品の説明</label>
-                    <textarea id="description" name="description" required></textarea>
+                    <label class="description-label" for="brand">ブランド</label>
+                    <input class="description-input" type="text" id="brand" name="brand" required>
                 </div>
                 <div class="form-group">
-                    <label for="price">販売価格</label>
-                    <input type="text" id="price" name="price" placeholder="¥" required>
+                    <label class="description-label" for="description">商品の説明</label>
+                    <textarea class="description-textarea" id="description" name="description" required></textarea>
+                </div>
+                <div class="form-group">
+                    <label class="description-label" for="price">販売価格</label>
+                    <input class="description-input" type="text" id="price" name="price" placeholder="¥" required>
                 </div>
             </div>
             <input type="hidden" name="item_image" value="{{ session('item_image') }}">
