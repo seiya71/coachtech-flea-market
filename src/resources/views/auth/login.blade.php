@@ -10,7 +10,7 @@
             @csrf
             <h2 class="login-title">ログイン</h2>
             <div class="login-form__group">
-                <label class="login-form__label" for="name">ユーザー名 / メールアドレス</label>
+                <label class="login-form__label" for="name">メールアドレス</label>
                 <input class="login-form__input" type="email" id="email" name="email">
                 @error('email')
                     <p>{{ $message }}</p>
