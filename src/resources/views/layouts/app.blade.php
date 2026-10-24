@@ -36,6 +36,9 @@
         @endif
     </header>
     <main>
+        @if (session('error'))
+            <p class="flash-error">{{ session('error') }}</p>
+        @endif
         @yield('content')
     </main>
 </body>

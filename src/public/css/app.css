@@ -219,3 +219,12 @@ li.page-item.disabled::marker {
         gap: 3px;
     }
 }
+
+.flash-error {
+    max-width: 1200px;
+    margin: 16px auto;
+    padding: 12px 16px;
+    background-color: #fdecec;
+    color: #d32f2f;
+    border-radius: 4px;
+}

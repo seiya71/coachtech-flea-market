@@ -51,13 +51,13 @@ Route::post('/addlike/{itemId}', [ItemController::class, 'addlike'])->name('addl
 
 Route::post('/addcomment/{itemId}', [ItemController::class, 'addcomment'])->name('addcomment');
 
-Route::get('/purchase/{itemId}', [PurchaseController::class, 'purchase'])->name('purchase');
+Route::get('/purchase/{itemId}', [PurchaseController::class, 'purchase'])->middleware('auth')->name('purchase');
 
-Route::post('/checkout/{itemId}', [PurchaseController::class, 'checkout'])->name('checkout');
+Route::post('/checkout/{itemId}', [PurchaseController::class, 'checkout'])->middleware('auth')->name('checkout');
 
-Route::get('/checkout/success', [PurchaseController::class, 'success'])->name('checkout.success');
+Route::get('/checkout/success', [PurchaseController::class, 'success'])->middleware('auth')->name('checkout.success');
 
-Route::get('/checkout/cancel', [PurchaseController::class, 'cancel'])->name('checkout.cancel');
+Route::get('/checkout/cancel', [PurchaseController::class, 'cancel'])->middleware('auth')->name('checkout.cancel');
 
 Route::get('/address/{itemId}', [UserController::class, 'address'])->name('address');
 
