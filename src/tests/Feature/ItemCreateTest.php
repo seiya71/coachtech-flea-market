@@ -21,7 +21,7 @@ class ItemCreateTest extends TestCase
 
         $category = Category::factory()->create();
 
-        $uploadResponse = $this->post('/upload-item-image', [
+        $uploadResponse = $this->actingAs($user)->post('/upload-item-image', [
             'item_image' => UploadedFile::fake()->create('test_image.png', 500),
         ]);
 

@@ -25,7 +25,7 @@ class ProfileRequest extends AddressRequest
     public function rules()
     {
         return array_merge(parent::rules(), [
-            'profile_image' => ['nullable', 'string', 'regex:/\.(jpeg|png)$/i'],
+            'profile_image' => ['nullable', 'string', 'regex:/\.(jpe?g|png)$/i'],
         ]);
     }
 }

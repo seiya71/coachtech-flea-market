@@ -26,7 +26,7 @@ class ExhibitionRequest extends FormRequest
         return [
             'item_name' => ['required'],
             'description' => ['required', 'max:255'],
-            'item_image' => ['required', 'string', 'regex:/\.(jpeg|png)$/i'],
+            'item_image' => ['required', 'string', 'regex:/\.(jpe?g|png)$/i'],
             'condition' => ['required'],
             'price' => ['required', 'integer', 'min:0'],
             'brand' => ['required'],

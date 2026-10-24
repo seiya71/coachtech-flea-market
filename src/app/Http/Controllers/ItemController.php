@@ -11,6 +11,7 @@ use App\Models\Comment;
 use App\Models\Category;
 use App\Http\Requests\CommentRequest;
 use App\Http\Requests\ExhibitionRequest;
+use App\Http\Requests\ItemImageRequest;
 use App\Http\Controllers\UserController;
 
 class ItemController extends Controller
@@ -195,18 +196,14 @@ class ItemController extends Controller
         return redirect()->route('home');
     }
 
-    public function uploadItemImage(Request $request)
+    public function uploadItemImage(ItemImageRequest $request)
     {
-        if ($request->hasFile('item_image')) {
-            $path = $request->file('item_image')->store('item_images', 'public');
+        $path = $request->file('item_image')->store('item_images', 'public');
 
-            session(['item_image' => $path]);
+        session(['item_image' => $path]);
 
-            if (app()->runningUnitTests()) {
-                return response()->json(['item_image' => $path]);
-            }
-
-            return back();
+        if (app()->runningUnitTests()) {
+            return response()->json(['item_image' => $path]);
         }
 
         return back();

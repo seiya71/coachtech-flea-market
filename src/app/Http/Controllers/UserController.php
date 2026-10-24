@@ -10,6 +10,7 @@ use Illuminate\Auth\Events\Registered;
 use App\Http\Requests\LoginRequest;
 use App\Http\Requests\RegisterRequest;
 use App\Http\Requests\ProfileRequest;
+use App\Http\Requests\ProfileImageRequest;
 use App\Models\User;
 use App\Models\Item;
 use App\Models\Purchase;
@@ -134,15 +135,11 @@ class UserController extends Controller
         return view('profile', compact('user', 'currentTab', 'sellingItems', 'purchasedItems'));
     }
 
-    public function updateUserImage(Request $request)
+    public function updateUserImage(ProfileImageRequest $request)
     {
-        $user = Auth::user();
+        $path = $request->file('profile_image')->store('profile_images', 'public');
 
-        if ($request->hasFile('profile_image')) {
-            $path = $request->file('profile_image')->store('profile_images', 'public');
-
-            session(['profile_image' => $path]);
-        }
+        session(['profile_image' => $path]);
 
         return redirect()->route('profile_edit');
     }

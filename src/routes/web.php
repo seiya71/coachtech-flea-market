@@ -69,10 +69,10 @@ Route::get('/profile_edit', [UserController::class, 'showEdit'])->name('profile_
 
 Route::post('/profile_edit', [UserController::class, 'edit'])->name('edit');
 
-Route::post('/profile_edit/image', [UserController::class, 'updateUserImage'])->name('updateUserImage');
+Route::post('/profile_edit/image', [UserController::class, 'updateUserImage'])->middleware('auth')->name('updateUserImage');
 
 Route::get('/sell', [ItemController::class, 'showSell'])->name('showSell');
 
-Route::post('/sell', [ItemController::class, 'sell'])->name('sell');
+Route::post('/sell', [ItemController::class, 'sell'])->middleware('auth')->name('sell');
 
-Route::post('/upload-item-image', [ItemController::class, 'uploadItemImage'])->name('uploadItemImage');
+Route::post('/upload-item-image', [ItemController::class, 'uploadItemImage'])->middleware('auth')->name('uploadItemImage');
