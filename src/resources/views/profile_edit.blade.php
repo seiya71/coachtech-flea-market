@@ -19,6 +19,9 @@
                 <input class="img-label" type="file" name="profile_image" id="profile_image" accept="image/*"
                     onchange="this.form.submit()">
             </div>
+            @error('profile_image')
+                <p>{{ $message }}</p>
+            @enderror
         </form>
 
         <form class="address-form" action="{{ route('edit') }}" method="POST">

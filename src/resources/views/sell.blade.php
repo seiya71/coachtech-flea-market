@@ -22,6 +22,9 @@
                         onchange="this.form.submit()">
                 </div>
             </div>
+            @error('item_image')
+                <p>{{ $message }}</p>
+            @enderror
         </form>
         <form action="{{ route('sell') }}" method="POST">
             @csrf
