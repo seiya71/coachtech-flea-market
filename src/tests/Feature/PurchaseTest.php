@@ -2,59 +2,72 @@
 
 namespace Tests\Feature;
 
-use Illuminate\Support\Facades\Http;
 use Illuminate\Foundation\Testing\RefreshDatabase;
-use Illuminate\Foundation\Testing\WithFaker;
 use Tests\TestCase;
 use Mockery;
 use App\Models\User;
 use App\Models\Item;
-use App\Models\Address;
-use Stripe\Stripe;
-use Stripe\Checkout\Session;
-use Stripe\PaymentIntent;
 use App\Models\Category;
-use Illuminate\Support\Facades\DB;
 use App\Models\Purchase;
-use App\Models\ItemCategory;
-
+use App\Services\StripeCheckoutService;
+use Stripe\Checkout\Session;
 
 class PurchaseTest extends TestCase
 {
     use RefreshDatabase;
 
+    private $stripe;
+
     protected function setUp(): void
     {
         parent::setUp();
 
-        Mockery::close();
-        $mockSession = Mockery::mock('overload:Stripe\Checkout\Session');
-        $mockSession->shouldReceive('create')->andReturn((object) [
-            'url' => route('checkout.success') . '?session_id=test_session_id'
+        $this->stripe = $this->mock(StripeCheckoutService::class);
+        $this->stripe->shouldReceive('createSession')->andReturn(
+            route('checkout.success') . '?session_id=test_session_id'
+        );
+    }
+
+    /**
+     * Stripe から返ってくる決済情報を作る
+     */
+    private function stripeSession(Item $item, User $buyer, string $status = 'complete'): Session
+    {
+        return Session::constructFrom([
+            'id' => 'test_session_id',
+            'status' => $status,
+            'metadata' => [
+                'item_id' => (string) $item->id,
+                'user_id' => (string) $buyer->id,
+            ],
         ]);
+    }
+
+    private function purchase(User $buyer, Item $item)
+    {
+        $this->actingAs($buyer);
+
+        $this->get(route('purchase', ['itemId' => $item->id]))->assertStatus(200);
+
+        $this->post(route('checkout', ['itemId' => $item->id]), [
+            'payment_method' => 'card',
+        ])->assertRedirect(route('checkout.success') . '?session_id=test_session_id');
+
+        return $this->get(route('checkout.success', ['session_id' => 'test_session_id']));
     }
 
     /** @test */
     public function 購入できる()
     {
         $user = User::factory()->create();
-        $this->actingAs($user);
-
         $item = Item::factory()->create(['sold' => false]);
 
         $category = Category::factory()->create(['category_name' => 'ファッション']);
         $item->categories()->attach($category->id);
 
-        $response = $this->get(route('purchase', ['itemId' => $item->id]));
-        $response->assertStatus(200);
+        $this->stripe->shouldReceive('retrieveSession')->andReturn($this->stripeSession($item, $user));
 
-        $response = $this->post(route('checkout', ['itemId' => $item->id]), [
-            'payment_method' => 'card',
-            'item_id' => $item->id,
-            'shipping_address' => '東京都渋谷区1-1-1',
-        ]);
-
-        $response = $this->get(route('checkout.success', ['session_id' => 'test_session_id']));
+        $response = $this->purchase($user, $item);
         $response->assertStatus(200);
 
         $this->assertDatabaseHas('purchases', [
@@ -67,24 +80,11 @@ class PurchaseTest extends TestCase
     public function 購入したらSoldと表示される()
     {
         $user = User::factory()->create();
-        $this->actingAs($user);
-
         $item = Item::factory()->create(['sold' => false]);
 
-        $category = Category::factory()->create(['category_name' => 'ファッション']);
-        $item->categories()->attach($category->id);
+        $this->stripe->shouldReceive('retrieveSession')->andReturn($this->stripeSession($item, $user));
 
-        $response = $this->get(route('purchase', ['itemId' => $item->id]));
-        $response->assertStatus(200);
-
-        $response = $this->post(route('checkout', ['itemId' => $item->id]), [
-            'payment_method' => 'card',
-            'item_id' => $item->id,
-            'shipping_address' => '東京都渋谷区1-1-1',
-        ]);
-
-        $response = $this->get(route('checkout.success', ['session_id' => 'test_session_id']));
-        $response->assertStatus(200);
+        $this->purchase($user, $item)->assertStatus(200);
 
         $response = $this->get('/?tab=all');
         $response->assertStatus(200);
@@ -96,27 +96,130 @@ class PurchaseTest extends TestCase
     public function 購入した商品プロフィールに表示される()
     {
         $user = User::factory()->create();
-        $this->actingAs($user);
-
         $item = Item::factory()->create(['sold' => false]);
 
-        $category = Category::factory()->create(['category_name' => 'ファッション']);
-        $item->categories()->attach($category->id);
+        $this->stripe->shouldReceive('retrieveSession')->andReturn($this->stripeSession($item, $user));
 
-        $response = $this->get(route('purchase', ['itemId' => $item->id]));
-        $response->assertStatus(200);
-
-        $response = $this->post(route('checkout', ['itemId' => $item->id]), [
-            'payment_method' => 'card',
-            'item_id' => $item->id,
-            'shipping_address' => '東京都渋谷区1-1-1',
-        ]);
-
-        $response = $this->get(route('checkout.success', ['session_id' => 'test_session_id']));
-        $response->assertStatus(200);
+        $this->purchase($user, $item)->assertStatus(200);
 
         $response = $this->get('/profile?tab=purchased');
 
-        $response->assertSee($item->name);
+        $response->assertSee($item->item_name);
+    }
+
+    /** @test */
+    public function 決済が完了していなければ購入されない()
+    {
+        $user = User::factory()->create();
+        $item = Item::factory()->create(['sold' => false]);
+
+        $this->stripe->shouldReceive('retrieveSession')->andReturn($this->stripeSession($item, $user, 'open'));
+
+        $this->purchase($user, $item)->assertRedirect('/');
+
+        $this->assertDatabaseMissing('purchases', ['item_id' => $item->id]);
+        $this->assertFalse($item->fresh()->sold);
+    }
+
+    /** @test */
+    public function session_idがなければ購入されない()
+    {
+        $user = User::factory()->create();
+        $item = Item::factory()->create(['sold' => false]);
+
+        $this->stripe->shouldNotReceive('retrieveSession');
+
+        $response = $this->actingAs($user)->get(route('checkout.success'));
+
+        $response->assertRedirect('/');
+        $this->assertDatabaseMissing('purchases', ['item_id' => $item->id]);
+    }
+
+    /** @test */
+    public function 他人の決済情報では購入されない()
+    {
+        $user = User::factory()->create();
+        $otherUser = User::factory()->create();
+        $item = Item::factory()->create(['sold' => false]);
+
+        $this->stripe->shouldReceive('retrieveSession')->andReturn($this->stripeSession($item, $otherUser));
+
+        $response = $this->actingAs($user)->get(route('checkout.success', ['session_id' => 'test_session_id']));
+
+        $response->assertRedirect('/');
+        $this->assertDatabaseMissing('purchases', ['item_id' => $item->id]);
+    }
+
+    /** @test */
+    public function 完了画面を再読み込みしても二重に購入されない()
+    {
+        $user = User::factory()->create();
+        $item = Item::factory()->create(['sold' => false]);
+
+        $this->stripe->shouldReceive('retrieveSession')->andReturn($this->stripeSession($item, $user));
+
+        $this->purchase($user, $item)->assertStatus(200);
+        $this->get(route('checkout.success', ['session_id' => 'test_session_id']))->assertStatus(200);
+
+        $this->assertSame(1, Purchase::where('item_id', $item->id)->count());
+    }
+
+    /** @test */
+    public function 決済画面ではURLの商品が購入対象になる()
+    {
+        $user = User::factory()->create();
+        $itemA = Item::factory()->create(['sold' => false]);
+        $itemB = Item::factory()->create(['sold' => false]);
+
+        $this->stripe = $this->mock(StripeCheckoutService::class);
+        $this->stripe->shouldReceive('createSession')
+            ->with(Mockery::on(function ($item) use ($itemB) {
+                return $item->id === $itemB->id;
+            }), Mockery::any(), 'card')
+            ->once()
+            ->andReturn('https://checkout.stripe.com/test');
+
+        $this->actingAs($user)
+            ->withSession(['itemId' => $itemA->id])
+            ->post(route('checkout', ['itemId' => $itemB->id]), ['payment_method' => 'card'])
+            ->assertRedirect('https://checkout.stripe.com/test');
+    }
+
+    /** @test */
+    public function 売り切れの商品は購入できない()
+    {
+        $user = User::factory()->create();
+        $item = Item::factory()->create(['sold' => true]);
+
+        $this->stripe->shouldNotReceive('createSession');
+
+        $this->actingAs($user)->get(route('purchase', ['itemId' => $item->id]))
+            ->assertRedirect(route('items.show', $item->id));
+
+        $this->post(route('checkout', ['itemId' => $item->id]), ['payment_method' => 'card'])
+            ->assertRedirect(route('items.show', $item->id));
+    }
+
+    /** @test */
+    public function 自分が出品した商品は購入できない()
+    {
+        $user = User::factory()->create();
+        $item = Item::factory()->create(['sold' => false, 'user_id' => $user->id]);
+
+        $this->stripe->shouldNotReceive('createSession');
+
+        $this->actingAs($user)->get(route('purchase', ['itemId' => $item->id]))
+            ->assertRedirect(route('items.show', $item->id));
+
+        $this->post(route('checkout', ['itemId' => $item->id]), ['payment_method' => 'card'])
+            ->assertRedirect(route('items.show', $item->id));
+    }
+
+    /** @test */
+    public function ログインしていないと購入画面に進めない()
+    {
+        $item = Item::factory()->create(['sold' => false]);
+
+        $this->get(route('purchase', ['itemId' => $item->id]))->assertRedirect('/login');
     }
 }

@@ -52,10 +52,14 @@
                             <div class="status-count">{{ $commentCount }}</div>
                         </div>
                     </div>
-                    <form action="{{ url('/purchase', ['itemId' => $item->id])}}" method="GET">
-                        @csrf
-                        <button type="submit" class="buy-btn">購入手続きへ</button>
-                    </form>
+                    @if ($item->sold)
+                        <button type="button" class="buy-btn" disabled>売り切れました</button>
+                    @elseif ($item->user_id !== Auth::id())
+                        <form action="{{ url('/purchase', ['itemId' => $item->id])}}" method="GET">
+                            @csrf
+                            <button type="submit" class="buy-btn">購入手続きへ</button>
+                        </form>
+                    @endif
                 </section>
 
                 <section class="item-description">

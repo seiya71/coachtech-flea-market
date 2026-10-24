@@ -17,6 +17,7 @@ class PaymentSelectTest extends TestCase
 
         $item = Item::factory()->create([
             'price' => 5000,
+            'sold' => false,
         ]);
 
         $this->actingAs($user);

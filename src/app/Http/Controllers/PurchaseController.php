@@ -10,8 +10,8 @@ use App\Models\User;
 use App\Models\Comment;
 use App\Models\Address;
 use App\Models\Purchase;
-use Stripe\Stripe;
-use Stripe\Checkout\Session;
+use App\Services\StripeCheckoutService;
+use Stripe\Exception\ApiErrorException;
 
 class PurchaseController extends Controller
 {
@@ -19,12 +19,12 @@ class PurchaseController extends Controller
     {
         $userId = Auth::id();
 
-        if (!$userId) {
-            return view('auth.login');
-        }
-
         $item = Item::findOrFail($itemId);
         $user = User::findOrFail($userId);
+
+        if ($error = $this->purchaseError($item)) {
+            return redirect()->route('items.show', $item->id)->with('error', $error);
+        }
 
         $address = session('shipping_address', null);
 
@@ -56,57 +56,54 @@ class PurchaseController extends Controller
         ]);
     }
 
-
-
-
-    public function checkout(Request $request)
+    public function checkout(Request $request, StripeCheckoutService $stripe, $itemId)
     {
         $request->validate([
             'payment_method' => 'required|in:card,konbini',
         ]);
 
-        $paymentMethod = $request->input('payment_method');
-        $itemId = session('itemId', $request->item_id);
         $item = Item::findOrFail($itemId);
-        $userId = auth()->id();
 
-        session()->put('itemId', $itemId);
-        session()->put('userId', $userId);
+        if ($error = $this->purchaseError($item)) {
+            return redirect()->route('items.show', $item->id)->with('error', $error);
+        }
 
-        Stripe::setApiKey(config('services.stripe.secret'));
+        $url = $stripe->createSession($item, Auth::user(), $request->input('payment_method'));
 
-        $session = Session::create([
-            'payment_method_types' => [$paymentMethod === 'card' ? 'card' : 'konbini'],
-            'line_items' => [
-                [
-                    'price_data' => [
-                        'currency' => 'jpy',
-                        'product_data' => [
-                            'name' => $item->item_name,
-                        ],
-                        'unit_amount' => $item->price,
-                    ],
-                    'quantity' => 1,
-                ],
-            ],
-            'mode' => 'payment',
-            'success_url' => route('checkout.success', [], true) . '?session_id={CHECKOUT_SESSION_ID}',
-            'cancel_url' => route('checkout.cancel', [], true),
-        ]);
-        
-        return redirect($session->url);
+        return redirect($url);
     }
 
-    public function success()
+    public function success(Request $request, StripeCheckoutService $stripe)
     {
-        $itemId = session('itemId');
-        $userId = session('userId');
+        $sessionId = $request->query('session_id');
 
-        if (!$itemId || !$userId) {
+        if (!$sessionId) {
             return redirect('/')->with('error', '購入情報が見つかりません。');
         }
 
-        DB::transaction(function () use ($itemId, $userId) {
+        try {
+            $session = $stripe->retrieveSession($sessionId);
+        } catch (ApiErrorException $e) {
+            return redirect('/')->with('error', '購入情報が見つかりません。');
+        }
+
+        $userId = Auth::id();
+        $itemId = (int) ($session->metadata->item_id ?? 0);
+
+        // 決済画面での手続きが完了していない、または他人の決済の場合は購入扱いにしない
+        // (コンビニ払いは支払い番号の発行で complete になり、その時点で商品を確保する)
+        if ($session->status !== 'complete' || (int) ($session->metadata->user_id ?? 0) !== $userId) {
+            return redirect('/')->with('error', '決済が完了していません。');
+        }
+
+        $purchased = DB::transaction(function () use ($itemId, $userId) {
+            $item = Item::lockForUpdate()->findOrFail($itemId);
+
+            // 完了画面の再読み込みでは二重に登録しない
+            if (Purchase::where('item_id', $itemId)->exists()) {
+                return Purchase::where('item_id', $itemId)->where('user_id', $userId)->exists();
+            }
+
             $address = Address::where('user_id', $userId)->first();
 
             if (!$address) {
@@ -120,7 +117,6 @@ class PurchaseController extends Controller
                 ]);
             }
 
-            $item = Item::findOrFail($itemId);
             $item->update(['sold' => true]);
 
             Purchase::create([
@@ -128,11 +124,28 @@ class PurchaseController extends Controller
                 'item_id' => $itemId,
                 'address_id' => $address->id,
             ]);
+
+            return true;
         });
 
-        session()->forget('itemId');
+        if (!$purchased) {
+            return redirect('/')->with('error', 'この商品はすでに購入されています。');
+        }
 
         return view('checkout.success');
+    }
+
+    private function purchaseError(Item $item)
+    {
+        if ($item->sold) {
+            return 'この商品は売り切れです。';
+        }
+
+        if ($item->user_id === Auth::id()) {
+            return '自分が出品した商品は購入できません。';
+        }
+
+        return null;
     }
 
     public function cancel()

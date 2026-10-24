@@ -127,6 +127,11 @@
     background-color: #e14b4b;
 }
 
+.buy-btn:disabled {
+    background-color: #b1b1b1;
+    cursor: default;
+}
+
 .item-description {
     width: 570px;
     height: 321px;
