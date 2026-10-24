@@ -26,14 +26,14 @@ DB_DATABASE=laravel_db
 DB_USERNAME=laravel_user
 DB_PASSWORD=laravel_pass
 
-STRIPE_PUBLIC_KEY=pk_test_51Qlt38LRILPtxq29bpg4uf2EoD5hLJGMmU6Sfbe40fpKfryoGcVt7ck7mojrEYNl1DB3aaWS2YLVXndFzmm4efFN00yYfGrAuM
-STRIPE_SECRET_KEY=sk_test_51Qlt38LRILPtxq29UPrq6N1OS9UD5cahH6c70HQrJlfIbZkzKSGAwl7R15OhRZycuyD8EBojZoLI38cimJQFWurG00joby3YaH
+STRIPE_PUBLIC_KEY=pk_test_xxxxxxxx  # Stripeダッシュボードのテスト用公開キー
+STRIPE_SECRET_KEY=sk_test_xxxxxxxx  # Stripeダッシュボードのテスト用シークレットキー
 
 MAIL_MAILER=smtp
 MAIL_HOST=sandbox.smtp.mailtrap.io
 MAIL_PORT=2525
-MAIL_USERNAME=8b045afad1fae6
-MAIL_PASSWORD=0ef65a6fa989fd
+MAIL_USERNAME=your_mailtrap_username
+MAIL_PASSWORD=your_mailtrap_password
 MAIL_ENCRYPTION=tls
 MAIL_FROM_ADDRESS=noreply@example.com
 MAIL_FROM_NAME="${APP_NAME}"
