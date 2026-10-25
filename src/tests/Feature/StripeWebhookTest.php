@@ -73,6 +73,44 @@ class StripeWebhookTest extends TestCase
     }
 
     /** @test */
+    public function このアプリ以外の決済の通知は無視して200を返す()
+    {
+        $payload = json_encode([
+            'id' => 'evt_test',
+            'object' => 'event',
+            'type' => 'checkout.session.completed',
+            'data' => ['object' => [
+                'id' => 'cs_other',
+                'object' => 'checkout.session',
+                'status' => 'complete',
+                'payment_status' => 'paid',
+                'metadata' => [],
+            ]],
+        ]);
+        $timestamp = time();
+        $signature = hash_hmac('sha256', $timestamp . '.' . $payload, self::WEBHOOK_SECRET);
+
+        $this->call('POST', route('stripe.webhook'), [], [], [], [
+            'CONTENT_TYPE' => 'application/json',
+            'HTTP_STRIPE_SIGNATURE' => "t={$timestamp},v1={$signature}",
+        ], $payload)->assertOk();
+
+        $this->assertDatabaseCount('purchases', 0);
+    }
+
+    /** @test */
+    public function 削除された商品の決済の通知は無視して200を返す()
+    {
+        $user = User::factory()->create();
+        $item = Item::factory()->create(['sold' => false]);
+        $item->delete();
+
+        $this->sendWebhook('checkout.session.completed', $item, $user, 'paid')->assertOk();
+
+        $this->assertDatabaseCount('purchases', 0);
+    }
+
+    /** @test */
     public function 完了画面を開かなくてもカード払いの購入が記録される()
     {
         $user = User::factory()->create();
