@@ -20,7 +20,8 @@ class ItemController extends Controller
     {
         $user = Auth::user();
 
-        if ($user && $user->first_login) {
+        // 初回ログイン時はプロフィール設定へ（メール認証が済んでいない場合はプロフィールを保存できないため除く）
+        if ($user && $user->first_login && $user->hasVerifiedEmail()) {
             $userController = new UserController();
             return $userController->showEdit($request);
         }
