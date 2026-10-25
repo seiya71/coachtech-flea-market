@@ -6,10 +6,7 @@ use Illuminate\Foundation\Auth\EmailVerificationRequest;
 use App\Http\Controllers\UserController;
 use App\Http\Controllers\ItemController;
 use App\Http\Controllers\PurchaseController;
-use Stripe\Stripe;
-use Stripe\Checkout\Session;
 use App\Http\Controllers\StripeWebhookController;
-use Laravel\Fortify\Features;
 
 /*
 |--------------------------------------------------------------------------

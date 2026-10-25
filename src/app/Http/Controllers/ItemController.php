@@ -4,8 +4,8 @@ namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
+use Illuminate\Support\Facades\Storage;
 use Illuminate\Database\QueryException;
-use App\models\User;
 use App\Models\Item;
 use App\Models\Like;
 use App\Models\Comment;
@@ -200,6 +200,12 @@ class ItemController extends Controller
     public function uploadItemImage(ItemImageRequest $request)
     {
         $path = $request->file('item_image')->store('item_images', 'public');
+
+        // 画像を選び直した場合は、前に選んでいた画像がどの商品にも使われていなければ削除する
+        $previousPath = session('item_image');
+        if ($previousPath && !Item::where('item_image', $previousPath)->exists()) {
+            Storage::disk('public')->delete($previousPath);
+        }
 
         session(['item_image' => $path]);
 

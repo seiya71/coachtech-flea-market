@@ -54,9 +54,4 @@ class Item extends Model
         return $this->hasMany(Comment::class, 'item_id');
     }
 
-    public function addresses()
-    {
-        return $this->hasMany(Address::class);
-    }
-
 }
