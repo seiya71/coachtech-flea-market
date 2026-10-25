@@ -46,34 +46,34 @@ Route::post('/email/verification-notification', function (Request $request) {
 
 Route::get('/item/{id}', [ItemController::class, 'show'])->name('items.show');
 
-Route::post('/addlike/{itemId}', [ItemController::class, 'addlike'])->middleware('auth')->name('addlike');
+Route::post('/addlike/{itemId}', [ItemController::class, 'addlike'])->middleware(['auth', 'verified'])->name('addlike');
 
-Route::post('/addcomment/{itemId}', [ItemController::class, 'addcomment'])->middleware('auth')->name('addcomment');
+Route::post('/addcomment/{itemId}', [ItemController::class, 'addcomment'])->middleware(['auth', 'verified'])->name('addcomment');
 
-Route::get('/purchase/{itemId}', [PurchaseController::class, 'purchase'])->middleware('auth')->name('purchase');
+Route::get('/purchase/{itemId}', [PurchaseController::class, 'purchase'])->middleware(['auth', 'verified'])->name('purchase');
 
-Route::post('/checkout/{itemId}', [PurchaseController::class, 'checkout'])->middleware('auth')->name('checkout');
+Route::post('/checkout/{itemId}', [PurchaseController::class, 'checkout'])->middleware(['auth', 'verified'])->name('checkout');
 
-Route::get('/checkout/success', [PurchaseController::class, 'success'])->middleware('auth')->name('checkout.success');
+Route::get('/checkout/success', [PurchaseController::class, 'success'])->middleware(['auth', 'verified'])->name('checkout.success');
 
-Route::get('/checkout/cancel', [PurchaseController::class, 'cancel'])->middleware('auth')->name('checkout.cancel');
+Route::get('/checkout/cancel', [PurchaseController::class, 'cancel'])->middleware(['auth', 'verified'])->name('checkout.cancel');
 
 Route::post('/stripe/webhook', [StripeWebhookController::class, 'handle'])->name('stripe.webhook');
 
-Route::get('/address/{itemId}', [UserController::class, 'address'])->middleware('auth')->name('address');
+Route::get('/address/{itemId}', [UserController::class, 'address'])->middleware(['auth', 'verified'])->name('address');
 
-Route::post('/purchase/address/{itemId}', [UserController::class, 'addressEdit'])->middleware('auth')->name('addressEdit');
+Route::post('/purchase/address/{itemId}', [UserController::class, 'addressEdit'])->middleware(['auth', 'verified'])->name('addressEdit');
 
-Route::get('/profile', [UserController::class, 'profile'])->middleware('auth')->name('profile');
+Route::get('/profile', [UserController::class, 'profile'])->middleware(['auth', 'verified'])->name('profile');
 
-Route::get('/profile_edit', [UserController::class, 'showEdit'])->middleware('auth')->name('profile_edit');
+Route::get('/profile_edit', [UserController::class, 'showEdit'])->middleware(['auth', 'verified'])->name('profile_edit');
 
-Route::post('/profile_edit', [UserController::class, 'edit'])->middleware('auth')->name('edit');
+Route::post('/profile_edit', [UserController::class, 'edit'])->middleware(['auth', 'verified'])->name('edit');
 
-Route::post('/profile_edit/image', [UserController::class, 'updateUserImage'])->middleware('auth')->name('updateUserImage');
+Route::post('/profile_edit/image', [UserController::class, 'updateUserImage'])->middleware(['auth', 'verified'])->name('updateUserImage');
 
-Route::get('/sell', [ItemController::class, 'showSell'])->middleware('auth')->name('showSell');
+Route::get('/sell', [ItemController::class, 'showSell'])->middleware(['auth', 'verified'])->name('showSell');
 
-Route::post('/sell', [ItemController::class, 'sell'])->middleware('auth')->name('sell');
+Route::post('/sell', [ItemController::class, 'sell'])->middleware(['auth', 'verified'])->name('sell');
 
-Route::post('/upload-item-image', [ItemController::class, 'uploadItemImage'])->middleware('auth')->name('uploadItemImage');
+Route::post('/upload-item-image', [ItemController::class, 'uploadItemImage'])->middleware(['auth', 'verified'])->name('uploadItemImage');

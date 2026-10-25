@@ -6,6 +6,8 @@ use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Hash;
 use Illuminate\Support\Facades\Redirect;
 use Illuminate\Support\Facades\Auth;
+use Illuminate\Support\Facades\RateLimiter;
+use Illuminate\Support\Str;
 use Illuminate\Auth\Events\Registered;
 use App\Http\Requests\LoginRequest;
 use App\Http\Requests\RegisterRequest;
@@ -43,26 +45,35 @@ class UserController extends Controller
 
     public function login(LoginRequest $request)
     {
-        $credentials = $request->validate([
-            'email' => ['required', 'email'],
-            'password' => ['required'],
-        ]);
+        // パスワードの総当たりを防ぐため、同じメールアドレスと IP からの失敗は1分間に5回まで
+        $throttleKey = Str::lower($request->input('email')) . '|' . $request->ip();
 
-        if (Auth::attempt($credentials)) {
-            $user = Auth::user();
+        if (RateLimiter::tooManyAttempts($throttleKey, 5)) {
+            $seconds = RateLimiter::availableIn($throttleKey);
 
-            if (!$user->hasVerifiedEmail()) {
-                Auth::logout();
-                return redirect('/email/verify')->with('error', 'メール認証を完了してください。');
-            }
-
-            $request->session()->regenerate();
-            return redirect('/');
-        } else {
-            return back()->withErrors([
-                'email' => 'ログイン情報が正しくありません。',
+            return back()->withInput($request->only('email'))->withErrors([
+                'email' => "ログインの試行回数が多すぎます。{$seconds}秒後にもう一度お試しください。",
             ]);
         }
+
+        if (!Auth::attempt($request->only('email', 'password'))) {
+            RateLimiter::hit($throttleKey, 60);
+
+            // メールアドレスが登録されているかどうかが分からないように、どちらの場合も同じメッセージにする
+            return back()->withInput($request->only('email'))->withErrors([
+                'email' => 'ログイン情報が登録されていません',
+            ]);
+        }
+
+        RateLimiter::clear($throttleKey);
+        $request->session()->regenerate();
+
+        // メール認証が済んでいない場合は、ログインしたまま認証画面へ（確認メールを再送できるように）
+        if (!Auth::user()->hasVerifiedEmail()) {
+            return redirect()->route('verification.notice')->with('error', 'メール認証を完了してください。');
+        }
+
+        return redirect('/');
     }
 
     public function logout(Request $request)

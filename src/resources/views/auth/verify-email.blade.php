@@ -8,6 +8,9 @@
     <div class="container">
         <h1>メール認証が必要です</h1>
         <p>メールを確認し、認証を完了してください。</p>
+        @if (session('message'))
+            <p>{{ session('message') }}</p>
+        @endif
         <form method="POST" action="{{ route('verification.send') }}">
             @csrf
             <button type="submit">確認メールを再送</button>
