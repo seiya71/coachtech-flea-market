@@ -4,12 +4,11 @@ namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
-use Illuminate\Support\Facades\DB;
 use App\Models\Item;
 use App\Models\User;
 use App\Models\Comment;
 use App\Models\Address;
-use App\Models\Purchase;
+use App\Services\PurchaseService;
 use App\Services\StripeCheckoutService;
 use Stripe\Exception\ApiErrorException;
 
@@ -73,7 +72,7 @@ class PurchaseController extends Controller
         return redirect($url);
     }
 
-    public function success(Request $request, StripeCheckoutService $stripe)
+    public function success(Request $request, StripeCheckoutService $stripe, PurchaseService $purchaseService)
     {
         $sessionId = $request->query('session_id');
 
@@ -87,52 +86,27 @@ class PurchaseController extends Controller
             return redirect('/')->with('error', '購入情報が見つかりません。');
         }
 
-        $userId = Auth::id();
-        $itemId = (int) ($session->metadata->item_id ?? 0);
-
         // 決済画面での手続きが完了していない、または他人の決済の場合は購入扱いにしない
         // (コンビニ払いは支払い番号の発行で complete になり、その時点で商品を確保する)
-        if ($session->status !== 'complete' || (int) ($session->metadata->user_id ?? 0) !== $userId) {
+        if ($session->status !== 'complete' || (int) ($session->metadata->user_id ?? 0) !== Auth::id()) {
             return redirect('/')->with('error', '決済が完了していません。');
         }
 
-        $purchased = DB::transaction(function () use ($itemId, $userId) {
-            $item = Item::lockForUpdate()->findOrFail($itemId);
+        $result = $purchaseService->fulfill($session);
 
-            // 完了画面の再読み込みでは二重に登録しない
-            if (Purchase::where('item_id', $itemId)->exists()) {
-                return Purchase::where('item_id', $itemId)->where('user_id', $userId)->exists();
+        if ($result === PurchaseService::RESULT_UNAVAILABLE) {
+            $message = 'この商品はすでに購入されています。';
+
+            if ($session->payment_status === 'paid') {
+                $message .= 'お支払いは返金されます。';
             }
 
-            $address = Address::where('user_id', $userId)->first();
-
-            if (!$address) {
-                $user = User::findOrFail($userId);
-
-                $address = Address::create([
-                    'user_id' => $user->id,
-                    'postal_code' => $user->postal_code,
-                    'address' => $user->address,
-                    'building_name' => $user->building_name,
-                ]);
-            }
-
-            $item->update(['sold' => true]);
-
-            Purchase::create([
-                'user_id' => $userId,
-                'item_id' => $itemId,
-                'address_id' => $address->id,
-            ]);
-
-            return true;
-        });
-
-        if (!$purchased) {
-            return redirect('/')->with('error', 'この商品はすでに購入されています。');
+            return redirect('/')->with('error', $message);
         }
 
-        return view('checkout.success');
+        return view('checkout.success', [
+            'isPending' => $result === PurchaseService::RESULT_PENDING,
+        ]);
     }
 
     private function purchaseError(Item $item)

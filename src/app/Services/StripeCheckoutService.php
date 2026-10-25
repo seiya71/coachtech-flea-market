@@ -5,6 +5,7 @@ namespace App\Services;
 use App\Models\Item;
 use App\Models\User;
 use Stripe\Checkout\Session;
+use Stripe\Refund;
 use Stripe\Stripe;
 
 class StripeCheckoutService
@@ -51,5 +52,17 @@ class StripeCheckoutService
     public function retrieveSession(string $sessionId): Session
     {
         return Session::retrieve($sessionId);
+    }
+
+    /**
+     * 決済を全額返金する
+     * (完了画面と Webhook の両方から呼ばれても二重に返金しないよう、決済IDごとに1回に限定する)
+     */
+    public function refund(string $paymentIntentId, string $sessionId): void
+    {
+        Refund::create(
+            ['payment_intent' => $paymentIntentId],
+            ['idempotency_key' => 'refund_' . $sessionId]
+        );
     }
 }

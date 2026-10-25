@@ -31,11 +31,13 @@ class PurchaseTest extends TestCase
     /**
      * Stripe から返ってくる決済情報を作る
      */
-    private function stripeSession(Item $item, User $buyer, string $status = 'complete'): Session
+    private function stripeSession(Item $item, User $buyer, string $status = 'complete', string $paymentStatus = 'paid'): Session
     {
         return Session::constructFrom([
             'id' => 'test_session_id',
             'status' => $status,
+            'payment_status' => $paymentStatus,
+            'payment_intent' => 'pi_test',
             'metadata' => [
                 'item_id' => (string) $item->id,
                 'user_id' => (string) $buyer->id,
@@ -162,6 +164,52 @@ class PurchaseTest extends TestCase
         $this->get(route('checkout.success', ['session_id' => 'test_session_id']))->assertStatus(200);
 
         $this->assertSame(1, Purchase::where('item_id', $item->id)->count());
+    }
+
+    /** @test */
+    public function コンビニ払いは支払い待ちとして商品が確保される()
+    {
+        $user = User::factory()->create();
+        $item = Item::factory()->create(['sold' => false]);
+
+        $this->stripe->shouldReceive('retrieveSession')->andReturn($this->stripeSession($item, $user, 'complete', 'unpaid'));
+
+        $response = $this->purchase($user, $item);
+        $response->assertStatus(200);
+        $response->assertSee('コンビニでのお支払いが確認できしだい、購入が完了します。');
+
+        $this->assertDatabaseHas('purchases', [
+            'item_id' => $item->id,
+            'user_id' => $user->id,
+            'status' => Purchase::STATUS_PENDING,
+        ]);
+        $this->assertTrue($item->fresh()->sold);
+
+        $this->get(route('profile', ['tab' => 'purchased']))->assertSee('支払い待ち');
+    }
+
+    /** @test */
+    public function 他の人が先に購入していた場合は返金される()
+    {
+        $user = User::factory()->create();
+        $item = Item::factory()->create(['sold' => false]);
+
+        $this->stripe->shouldReceive('retrieveSession')->andReturn($this->stripeSession($item, $user));
+
+        $this->actingAs($user);
+        $this->post(route('checkout', ['itemId' => $item->id]), ['payment_method' => 'card']);
+
+        // 決済画面で支払っている間に、他の人が先に購入した
+        Purchase::factory()->create(['item_id' => $item->id, 'stripe_session_id' => 'other_session_id']);
+        $item->update(['sold' => true]);
+
+        $this->stripe->shouldReceive('refund')->with('pi_test', 'test_session_id')->once();
+
+        $this->get(route('checkout.success', ['session_id' => 'test_session_id']))
+            ->assertRedirect('/')
+            ->assertSessionHas('error', 'この商品はすでに購入されています。お支払いは返金されます。');
+
+        $this->assertDatabaseMissing('purchases', ['stripe_session_id' => 'test_session_id']);
     }
 
     /** @test */

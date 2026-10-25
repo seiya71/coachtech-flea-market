@@ -28,6 +28,7 @@ DB_PASSWORD=laravel_pass
 
 STRIPE_PUBLIC_KEY=pk_test_xxxxxxxx  # Stripeダッシュボードのテスト用公開キー
 STRIPE_SECRET_KEY=sk_test_xxxxxxxx  # Stripeダッシュボードのテスト用シークレットキー
+STRIPE_WEBHOOK_SECRET=whsec_xxxxxxxx  # 下の「Stripe Webhook の設定」で表示される署名シークレット
 
 MAIL_MAILER=smtp
 MAIL_HOST=sandbox.smtp.mailtrap.io
@@ -95,6 +96,25 @@ curl -o src/storage/app/public/item_images/メイクセット.png "https://coach
 ``` bash
 docker-compose exec php php artisan db:seed
 ```
+**Stripe Webhook の設定**
+
+決済の完了やコンビニ払いの支払い・期限切れは、Stripe からの通知（Webhook）で購入に反映されます。
+開発環境では [Stripe CLI](https://docs.stripe.com/stripe-cli) を使って、通知を手元に転送します。
+1. Stripe CLI をインストールしてログイン
+```bash
+stripe login
+```
+2. 通知の転送を開始（起動したままにしておく）
+```bash
+stripe listen --events checkout.session.completed,checkout.session.async_payment_succeeded,checkout.session.async_payment_failed --forward-to http://localhost/stripe/webhook
+```
+3. 表示された `whsec_` から始まる署名シークレットを `.env` の `STRIPE_WEBHOOK_SECRET` に設定し、設定を反映
+```bash
+docker-compose exec php php artisan config:clear
+```
+
+本番環境では、Stripe ダッシュボードの「Webhook」で `https://<ドメイン>/stripe/webhook` を登録し、上の3つのイベントを選択してください。
+
 **テスト環境構築**
 1. `.env.testing.example` を `.env.testing` にコピー
 ```bash

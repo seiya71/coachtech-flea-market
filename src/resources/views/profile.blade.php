@@ -71,6 +71,9 @@
                                 <a class="item-name" href="{{ url('/item', $purchase->item->id) }}">
                                     <p>{{ $purchase->item->item_name }}</p>
                                 </a>
+                                @if ($purchase->isPending())
+                                    <p class="item-status">支払い待ち</p>
+                                @endif
                             </div>
                         @endforeach
                     </div>
