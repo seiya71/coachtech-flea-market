@@ -1,0 +1,59 @@
+name: テスト
+
+on:
+  pull_request:
+  push:
+    branches: [main, develop]
+
+jobs:
+  test:
+    name: テスト
+    runs-on: ubuntu-latest
+
+    services:
+      mysql:
+        image: mysql:8.0.26
+        env:
+          MYSQL_ROOT_PASSWORD: root
+          MYSQL_DATABASE: test_db
+        ports:
+          - 3306:3306
+        options: >-
+          --health-cmd="mysqladmin ping -h 127.0.0.1 -proot"
+          --health-interval=10s
+          --health-timeout=5s
+          --health-retries=10
+
+    defaults:
+      run:
+        working-directory: src
+
+    env:
+      DB_HOST: 127.0.0.1
+
+    steps:
+      - uses: actions/checkout@v4
+
+      # 開発環境（docker/php/Dockerfile）と同じ PHP 7.4 を使う
+      - uses: shivammathur/setup-php@v2
+        with:
+          php-version: '7.4'
+          extensions: pdo_mysql, zip, gd
+          coverage: none
+
+      - uses: actions/cache@v4
+        with:
+          path: ~/.composer/cache/files
+          key: composer-${{ hashFiles('src/composer.lock') }}
+
+      - name: Composer パッケージのインストール
+        run: composer install --no-interaction --prefer-dist --no-progress
+
+      - name: テスト環境の準備
+        run: |
+          cp .env.testing.example .env.testing
+          php artisan key:generate --env=testing
+          php artisan migrate --env=testing --force
+
+      - name: テストの実行
+        run: php artisan test --env=testing
