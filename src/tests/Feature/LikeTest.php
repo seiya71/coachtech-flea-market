@@ -49,13 +49,15 @@ class LikeTest extends TestCase
         $item = Item::factory()->create(['user_id' => $otherUser->id]);
 
         $response = $this->get(route('items.show', $item->id));
-        $response->assertSee('☆');
+        $response->assertSee('/images/icons/star.png');
+        $response->assertDontSee('/images/icons/gold-star.png');
 
         $this->post(route('addlike', $item->id));
 
-        $response = $this->get(route('addlike', $item->id));
+        $response = $this->get(route('items.show', $item->id));
 
-        $response->assertSee('★');
+        $response->assertSee('/images/icons/gold-star.png');
+        $response->assertDontSee('/images/icons/star.png');
     }
 
     /** @test */
