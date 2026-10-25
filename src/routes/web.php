@@ -1,5 +1,6 @@
 <?php
 
+use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Route;
 use Illuminate\Foundation\Auth\EmailVerificationRequest;
 use App\Http\Controllers\UserController;
@@ -25,8 +26,6 @@ Route::get('/', [ItemController::class, 'index'])->name('home');
 
 Route::post('/register', [UserController::class, 'register']);
 
-Route::get('/profile_edit', [UserController::class, 'showEdit'])->name('profile_edit');
-
 Route::post('/login', [UserController::class, 'login']);
 
 Route::post('/logout', [UserController::class, 'logout'])->name('logout');
@@ -47,9 +46,9 @@ Route::post('/email/verification-notification', function (Request $request) {
 
 Route::get('/item/{id}', [ItemController::class, 'show'])->name('items.show');
 
-Route::post('/addlike/{itemId}', [ItemController::class, 'addlike'])->name('addlike');
+Route::post('/addlike/{itemId}', [ItemController::class, 'addlike'])->middleware('auth')->name('addlike');
 
-Route::post('/addcomment/{itemId}', [ItemController::class, 'addcomment'])->name('addcomment');
+Route::post('/addcomment/{itemId}', [ItemController::class, 'addcomment'])->middleware('auth')->name('addcomment');
 
 Route::get('/purchase/{itemId}', [PurchaseController::class, 'purchase'])->middleware('auth')->name('purchase');
 
@@ -59,19 +58,19 @@ Route::get('/checkout/success', [PurchaseController::class, 'success'])->middlew
 
 Route::get('/checkout/cancel', [PurchaseController::class, 'cancel'])->middleware('auth')->name('checkout.cancel');
 
-Route::get('/address/{itemId}', [UserController::class, 'address'])->name('address');
+Route::get('/address/{itemId}', [UserController::class, 'address'])->middleware('auth')->name('address');
 
-Route::post('/purchase/address/{itemId}', [UserController::class, 'addressEdit'])->name('addressEdit');
+Route::post('/purchase/address/{itemId}', [UserController::class, 'addressEdit'])->middleware('auth')->name('addressEdit');
 
-Route::get('/profile', [UserController::class, 'profile'])->name('profile');
+Route::get('/profile', [UserController::class, 'profile'])->middleware('auth')->name('profile');
 
-Route::get('/profile_edit', [UserController::class, 'showEdit'])->name('profile_edit');
+Route::get('/profile_edit', [UserController::class, 'showEdit'])->middleware('auth')->name('profile_edit');
 
-Route::post('/profile_edit', [UserController::class, 'edit'])->name('edit');
+Route::post('/profile_edit', [UserController::class, 'edit'])->middleware('auth')->name('edit');
 
 Route::post('/profile_edit/image', [UserController::class, 'updateUserImage'])->middleware('auth')->name('updateUserImage');
 
-Route::get('/sell', [ItemController::class, 'showSell'])->name('showSell');
+Route::get('/sell', [ItemController::class, 'showSell'])->middleware('auth')->name('showSell');
 
 Route::post('/sell', [ItemController::class, 'sell'])->middleware('auth')->name('sell');
 

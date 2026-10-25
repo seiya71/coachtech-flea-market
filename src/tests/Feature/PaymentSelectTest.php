@@ -10,6 +10,8 @@ use App\Models\Item;
 
 class PaymentSelectTest extends TestCase
 {
+    use RefreshDatabase;
+
     /** @test */
     public function 支払い方法を選択したら小計表示も変更される()
     {
