@@ -58,6 +58,8 @@ Route::get('/checkout/success', [PurchaseController::class, 'success'])->middlew
 
 Route::get('/checkout/cancel', [PurchaseController::class, 'cancel'])->middleware('auth')->name('checkout.cancel');
 
+Route::post('/stripe/webhook', [StripeWebhookController::class, 'handle'])->name('stripe.webhook');
+
 Route::get('/address/{itemId}', [UserController::class, 'address'])->middleware('auth')->name('address');
 
 Route::post('/purchase/address/{itemId}', [UserController::class, 'addressEdit'])->middleware('auth')->name('addressEdit');
