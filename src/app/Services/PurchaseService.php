@@ -63,13 +63,12 @@ class PurchaseService
 
             $item->update(['sold' => true]);
 
-            Purchase::create([
+            Purchase::create(array_merge([
                 'user_id' => $userId,
                 'item_id' => $itemId,
-                'address_id' => $this->shippingAddress($userId)->id,
                 'stripe_session_id' => $session->id,
                 'status' => $isPaid ? Purchase::STATUS_PAID : Purchase::STATUS_PENDING,
-            ]);
+            ], $this->shippingAddress($session, $userId)));
 
             return $isPaid ? self::RESULT_PAID : self::RESULT_PENDING;
         });
@@ -101,22 +100,29 @@ class PurchaseService
         });
     }
 
-    private function shippingAddress(int $userId): Address
+    /**
+     * 配送先（購入手続きをした時点の住所を、決済画面の作成時に Stripe に保存してある）
+     */
+    private function shippingAddress(Session $session, int $userId): array
     {
-        $address = Address::where('user_id', $userId)->first();
+        $metadata = $session->metadata;
 
-        if ($address) {
-            return $address;
+        if (isset($metadata->shipping_address)) {
+            return [
+                'shipping_postal_code' => $metadata->shipping_postal_code ?? null,
+                'shipping_address' => $metadata->shipping_address,
+                'shipping_building_name' => ($metadata->shipping_building_name ?? '') ?: null,
+            ];
         }
 
-        $user = User::findOrFail($userId);
+        // 配送先を保存する前に作られた決済は、今登録されている住所（なければプロフィールの住所）を使う
+        $address = Address::where('user_id', $userId)->first() ?? User::findOrFail($userId);
 
-        return Address::create([
-            'user_id' => $user->id,
-            'postal_code' => $user->postal_code,
-            'address' => $user->address,
-            'building_name' => $user->building_name,
-        ]);
+        return [
+            'shipping_postal_code' => $address->postal_code,
+            'shipping_address' => $address->address,
+            'shipping_building_name' => $address->building_name,
+        ];
     }
 
     private function refund(Session $session): void

@@ -8,7 +8,6 @@ use Tests\TestCase;
 use App\Models\User;
 use App\Models\Item;
 use App\Models\Product;
-use App\Models\Address;
 use App\Models\Purchase;
 use Illuminate\Support\Facades\Hash;
 
@@ -41,18 +40,12 @@ class GetUserTest extends TestCase
             'sold' => true,
         ]);
 
-        $address = Address::factory()->create([
-            'user_id' => $user->id,
-            'postal_code' => '1234567',
-            'address' => 'サンプルの住所',
-            'building_name' => 'サンプルの建物',
-        ]);
-
-
         $purchase = Purchase::factory()->create([
             'user_id' => $user->id,
             'item_id' => $item->id,
-            'address_id' => $address->id,
+            'shipping_postal_code' => '1234567',
+            'shipping_address' => 'サンプルの住所',
+            'shipping_building_name' => 'サンプルの建物',
         ]);
 
         $response = $this->get('/profile?tab=purchased');

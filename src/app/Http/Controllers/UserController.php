@@ -91,12 +91,13 @@ class UserController extends Controller
         $user = Auth::user();
         $item = Item::findOrFail($itemId);
 
-        $address = Address::where('user_id', $user->id)->first();
+        // 登録済みの住所（なければプロフィールの住所）を初期値にする
+        $address = Address::where('user_id', $user->id)->first() ?? $user;
 
         $defaultAddress = [
-            'postal_code' => $address->postal_code ?? $user->postal_code,
-            'address' => $address->address ?? $user->address,
-            'building_name' => $address->building_name ?? $user->building_name,
+            'postal_code' => $address->postal_code,
+            'address' => $address->address,
+            'building_name' => $address->building_name,
         ];
 
         return view('address', [

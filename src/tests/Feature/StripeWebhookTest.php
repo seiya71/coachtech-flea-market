@@ -45,6 +45,9 @@ class StripeWebhookTest extends TestCase
                     'metadata' => [
                         'item_id' => (string) $item->id,
                         'user_id' => (string) $buyer->id,
+                        'shipping_postal_code' => '111-1111',
+                        'shipping_address' => '購入時の住所',
+                        'shipping_building_name' => '',
                     ],
                 ],
             ],
@@ -123,6 +126,9 @@ class StripeWebhookTest extends TestCase
             'user_id' => $user->id,
             'stripe_session_id' => 'cs_test',
             'status' => Purchase::STATUS_PAID,
+            'shipping_postal_code' => '111-1111',
+            'shipping_address' => '購入時の住所',
+            'shipping_building_name' => null,
         ]);
         $this->assertTrue($item->fresh()->sold);
     }

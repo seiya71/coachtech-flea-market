@@ -2,6 +2,7 @@
 
 namespace App\Services;
 
+use App\Models\Address;
 use App\Models\Item;
 use App\Models\User;
 use Stripe\Checkout\Session;
@@ -18,7 +19,7 @@ class StripeCheckoutService
     /**
      * Stripe の決済画面を作成し、その URL を返す
      */
-    public function createSession(Item $item, User $user, string $paymentMethod): string
+    public function createSession(Item $item, User $user, string $paymentMethod, Address $shippingAddress): string
     {
         $session = Session::create([
             'payment_method_types' => [$paymentMethod],
@@ -35,9 +36,13 @@ class StripeCheckoutService
                 ],
             ],
             'mode' => 'payment',
+            // 決済の完了を Webhook で受け取ったときも、購入手続きをした時点の配送先で記録できるようにする
             'metadata' => [
                 'item_id' => $item->id,
                 'user_id' => $user->id,
+                'shipping_postal_code' => (string) $shippingAddress->postal_code,
+                'shipping_address' => (string) $shippingAddress->address,
+                'shipping_building_name' => (string) $shippingAddress->building_name,
             ],
             'success_url' => route('checkout.success', [], true) . '?session_id={CHECKOUT_SESSION_ID}',
             'cancel_url' => route('checkout.cancel', [], true),

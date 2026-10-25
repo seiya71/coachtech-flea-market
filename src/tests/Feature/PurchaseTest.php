@@ -41,6 +41,9 @@ class PurchaseTest extends TestCase
             'metadata' => [
                 'item_id' => (string) $item->id,
                 'user_id' => (string) $buyer->id,
+                'shipping_postal_code' => '111-1111',
+                'shipping_address' => '購入時の住所',
+                'shipping_building_name' => '購入時の建物',
             ],
         ]);
     }
@@ -223,7 +226,7 @@ class PurchaseTest extends TestCase
         $this->stripe->shouldReceive('createSession')
             ->with(Mockery::on(function ($item) use ($itemB) {
                 return $item->id === $itemB->id;
-            }), Mockery::any(), 'card')
+            }), Mockery::any(), 'card', Mockery::any())
             ->once()
             ->andReturn('https://checkout.stripe.com/test');
 
