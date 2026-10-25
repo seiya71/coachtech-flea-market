@@ -20,7 +20,7 @@ class LikesTableSeeder extends Seeder
         $likesCount = 200;
 
         $insertData = [];
-        for ($i = 0; $i < $likesCount; $i++) {
+        while (count($insertData) < $likesCount) {
             $user_id = $faker->numberBetween(1, 100);
             $item_id = $faker->numberBetween(1, 30);
 
@@ -28,7 +28,13 @@ class LikesTableSeeder extends Seeder
                 $user_id = $faker->numberBetween(1, 100);
             }
 
-            $insertData[] = [
+            // 同じユーザーが同じ商品に二重にいいねしないようにする
+            $key = $user_id . '-' . $item_id;
+            if (isset($insertData[$key])) {
+                continue;
+            }
+
+            $insertData[$key] = [
                 'user_id' => $user_id,
                 'item_id' => $item_id,
                 'created_at' => now(),
@@ -36,6 +42,6 @@ class LikesTableSeeder extends Seeder
             ];
         }
 
-        DB::table('likes')->insert($insertData);
+        DB::table('likes')->insert(array_values($insertData));
     }
 }

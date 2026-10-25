@@ -4,6 +4,7 @@ namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
+use Illuminate\Database\QueryException;
 use App\models\User;
 use App\Models\Item;
 use App\Models\Like;
@@ -130,10 +131,17 @@ class ItemController extends Controller
         if ($like) {
             $like->delete();
         } else {
-            Like::create([
-                'user_id' => $userId,
-                'item_id' => $itemId
-            ]);
+            try {
+                Like::create([
+                    'user_id' => $userId,
+                    'item_id' => $itemId
+                ]);
+            } catch (QueryException $e) {
+                // ボタンの連打などで同時に登録された場合は、すでにいいね済みとして扱う
+                if ($e->getCode() !== '23000') {
+                    throw $e;
+                }
+            }
         }
 
         return redirect()->back();
