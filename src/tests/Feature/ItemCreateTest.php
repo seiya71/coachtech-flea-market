@@ -9,6 +9,7 @@ use App\Models\User;
 use App\Models\Item;
 use App\Models\Category;
 use Illuminate\Http\UploadedFile;
+use Illuminate\Support\Facades\Storage;
 
 class ItemCreateTest extends TestCase
 {
@@ -17,6 +18,8 @@ class ItemCreateTest extends TestCase
     /** @test */
     public function 商品を出品することができる()
     {
+        Storage::fake('public');
+
         $user = User::factory()->create();
 
         $category = Category::factory()->create();

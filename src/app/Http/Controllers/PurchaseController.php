@@ -4,6 +4,7 @@ namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
+use Illuminate\Validation\Rule;
 use App\Models\Item;
 use App\Models\User;
 use App\Models\Comment;
@@ -40,10 +41,7 @@ class PurchaseController extends Controller
         }
 
         $paymentMethod = $request->input('payment_method', '');
-        $paymentMethods = [
-            'card' => 'カード払い',
-            'konbini' => 'コンビニ払い',
-        ];
+        $paymentMethods = $this->paymentMethods($item);
 
         return view('purchase', [
             'item' => $item,
@@ -57,17 +55,27 @@ class PurchaseController extends Controller
 
     public function checkout(Request $request, StripeCheckoutService $stripe, $itemId)
     {
-        $request->validate([
-            'payment_method' => 'required|in:card,konbini',
-        ]);
-
         $item = Item::findOrFail($itemId);
+
+        $request->validate([
+            'payment_method' => ['required', Rule::in(array_keys($this->paymentMethods($item)))],
+        ], [
+            'payment_method.required' => '支払い方法を選択してください',
+            'payment_method.in' => 'この商品ではその支払い方法は使えません',
+        ]);
 
         if ($error = $this->purchaseError($item)) {
             return redirect()->route('items.show', $item->id)->with('error', $error);
         }
 
-        $url = $stripe->createSession($item, Auth::user(), $request->input('payment_method'));
+        try {
+            $url = $stripe->createSession($item, Auth::user(), $request->input('payment_method'));
+        } catch (ApiErrorException $e) {
+            report($e);
+
+            return redirect()->route('purchase', ['itemId' => $item->id])
+                ->with('error', '決済画面を開けませんでした。時間をおいてもう一度お試しください。');
+        }
 
         return redirect($url);
     }
@@ -109,7 +117,22 @@ class PurchaseController extends Controller
         ]);
     }
 
-    private function purchaseError(Item $item)
+    /**
+     * 商品で使える支払い方法
+     * (Stripe のコンビニ払いは 120円〜300,000円 の決済にしか使えない)
+     */
+    private function paymentMethods(Item $item)
+    {
+        $paymentMethods = ['card' => 'カード払い'];
+
+        if ($item->price >= 120 && $item->price <= 300000) {
+            $paymentMethods['konbini'] = 'コンビニ払い';
+        }
+
+        return $paymentMethods;
+    }
+
+        private function purchaseError(Item $item)
     {
         if ($item->sold) {
             return 'この商品は売り切れです。';

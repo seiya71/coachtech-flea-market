@@ -78,9 +78,11 @@
                 <div class="form-group">
                     <label class="description-label" for="price">販売価格</label>
                     <input class="description-input" type="text" id="price" name="price" placeholder="¥" required>
+                    @error('price')
+                        <p>{{ $message }}</p>
+                    @enderror
                 </div>
             </div>
-            <input type="hidden" name="item_image" value="{{ session('item_image') }}">
             <button type="submit" class="sell-btn">出品する</button>
         </form>
     </div>

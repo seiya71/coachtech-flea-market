@@ -29,6 +29,9 @@
                         @endforeach
                     </select>
                 </form>
+                @error('payment_method')
+                    <p>{{ $message }}</p>
+                @enderror
 
             </div>
             <div class="shipping-info">

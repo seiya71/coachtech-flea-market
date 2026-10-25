@@ -24,8 +24,7 @@ class ProfileRequest extends AddressRequest
      */
     public function rules()
     {
-        return array_merge(parent::rules(), [
-            'profile_image' => ['nullable', 'string', 'regex:/\.(jpe?g|png)$/i'],
-        ]);
+        // プロフィール画像はアップロード時にセッションに保存したパスを使うので、フォームの値は受け付けない
+        return parent::rules();
     }
 }
