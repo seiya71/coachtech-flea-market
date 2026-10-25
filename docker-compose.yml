@@ -1,5 +1,3 @@
-version: '3.8'
-
 services:
     nginx:
         image: nginx:1.21.1
@@ -28,6 +26,7 @@ services:
         volumes:
             - ./docker/mysql/data:/var/lib/mysql
             - ./docker/mysql/my.cnf:/etc/mysql/conf.d/my.cnf
+            - ./docker/mysql/init:/docker-entrypoint-initdb.d
 
     phpmyadmin:
         image: phpmyadmin/phpmyadmin

@@ -7,6 +7,7 @@ use Illuminate\Http\UploadedFile;
 use Illuminate\Support\Facades\Storage;
 use Tests\TestCase;
 use App\Models\User;
+use App\Models\Item;
 
 class ImageUploadTest extends TestCase
 {
@@ -104,6 +105,59 @@ class ImageUploadTest extends TestCase
 
         $response->assertSessionHasNoErrors();
         $response->assertRedirect('/profile_edit');
+        Storage::disk('public')->assertExists(session('profile_image'));
+    }
+
+    /** @test */
+    public function 商品画像を選び直すと前に選んでいた画像は削除される()
+    {
+        $this->actingAs(User::factory()->create());
+
+        $first = $this->post('/upload-item-image', [
+            'item_image' => UploadedFile::fake()->create('first.png', 500),
+        ])->json()['item_image'];
+
+        $second = $this->post('/upload-item-image', [
+            'item_image' => UploadedFile::fake()->create('second.png', 500),
+        ])->json()['item_image'];
+
+        Storage::disk('public')->assertMissing($first);
+        Storage::disk('public')->assertExists($second);
+    }
+
+    /** @test */
+    public function 前に選んでいた画像が商品に使われていれば削除しない()
+    {
+        $this->actingAs(User::factory()->create());
+
+        $first = $this->post('/upload-item-image', [
+            'item_image' => UploadedFile::fake()->create('first.png', 500),
+        ])->json()['item_image'];
+
+        Item::factory()->create(['item_image' => $first]);
+
+        $this->post('/upload-item-image', [
+            'item_image' => UploadedFile::fake()->create('second.png', 500),
+        ]);
+
+        Storage::disk('public')->assertExists($first);
+    }
+
+    /** @test */
+    public function プロフィール画像を選び直すと前に選んでいた画像は削除される()
+    {
+        $this->actingAs(User::factory()->create());
+
+        $this->post('/profile_edit/image', [
+            'profile_image' => UploadedFile::fake()->create('first.png', 500),
+        ]);
+        $first = session('profile_image');
+
+        $this->post('/profile_edit/image', [
+            'profile_image' => UploadedFile::fake()->create('second.png', 500),
+        ]);
+
+        Storage::disk('public')->assertMissing($first);
         Storage::disk('public')->assertExists(session('profile_image'));
     }
 }

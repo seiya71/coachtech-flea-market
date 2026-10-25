@@ -4,8 +4,8 @@ namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Hash;
-use Illuminate\Support\Facades\Redirect;
 use Illuminate\Support\Facades\Auth;
+use Illuminate\Support\Facades\Storage;
 use Illuminate\Support\Facades\RateLimiter;
 use Illuminate\Support\Str;
 use Illuminate\Auth\Events\Registered;
@@ -144,6 +144,12 @@ class UserController extends Controller
     {
         $path = $request->file('profile_image')->store('profile_images', 'public');
 
+        // 画像を選び直した場合は、前に選んでいた画像がどのユーザーにも使われていなければ削除する
+        $previousPath = session('profile_image');
+        if ($previousPath && !User::where('profile_image', $previousPath)->exists()) {
+            Storage::disk('public')->delete($previousPath);
+        }
+
         session(['profile_image' => $path]);
 
         return redirect()->route('profile_edit');
@@ -168,15 +174,5 @@ class UserController extends Controller
         }
 
         return redirect('/');
-    }
-
-    public function revertProfileImage()
-    {
-        $user = Auth::user();
-
-        if (session()->has('profile_image')) {
-            $user->profile_image = session('profile_image');
-            $user->save();
-        }
     }
 }

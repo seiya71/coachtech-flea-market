@@ -7,7 +7,6 @@ use Illuminate\Support\Facades\Auth;
 use Illuminate\Validation\Rule;
 use App\Models\Item;
 use App\Models\User;
-use App\Models\Comment;
 use App\Models\Address;
 use App\Services\PurchaseService;
 use App\Services\StripeCheckoutService;
