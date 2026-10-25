@@ -46,8 +46,10 @@ class IndexTest extends TestCase
         $user = User::factory()->create();
         $this->actingAs($user);
 
+        // ランダムな単語だとページ内の別の文字列（buttonなど）に一致することがあるため固定する
         $item = Item::factory()->create([
             'user_id' => $user->id,
+            'item_name' => '自分が出品したテスト用商品',
             'sold' => true,
         ]);
 
