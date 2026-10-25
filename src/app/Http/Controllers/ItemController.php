@@ -189,7 +189,8 @@ class ItemController extends Controller
         ]);
 
         if (isset($validatedData['categories'])) {
-            $item->categories()->attach($validatedData['categories']);
+            // 同じカテゴリが重複して送られても1回だけ登録する
+            $item->categories()->attach(array_unique($validatedData['categories']));
         }
 
         session()->forget('item_image');

@@ -34,10 +34,12 @@ class AddUniqueIndexToLikesTable extends Migration
      */
     public function down()
     {
+        // ユニークインデックスは user_id の外部キーのインデックスを兼ねているので、
+        // 外部キーを外してから削除し、外部キーを作り直す（元のインデックスも作り直される）
         Schema::table('likes', function (Blueprint $table) {
-            // user_id の外部キーがこのインデックスを使うため、先に通常のインデックスを作っておく
-            $table->index('user_id');
+            $table->dropForeign(['user_id']);
             $table->dropUnique(['user_id', 'item_id']);
+            $table->foreign('user_id')->references('id')->on('users');
         });
     }
 }
