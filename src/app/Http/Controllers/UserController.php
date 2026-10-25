@@ -11,6 +11,7 @@ use App\Http\Requests\LoginRequest;
 use App\Http\Requests\RegisterRequest;
 use App\Http\Requests\ProfileRequest;
 use App\Http\Requests\ProfileImageRequest;
+use App\Http\Requests\ShippingAddressRequest;
 use App\Models\User;
 use App\Models\Item;
 use App\Models\Purchase;
@@ -94,15 +95,11 @@ class UserController extends Controller
         ]);
     }
 
-    public function addressEdit(Request $request, $itemId)
+    public function addressEdit(ShippingAddressRequest $request, $itemId)
     {
         $userId = Auth::id();
 
-        if (!$userId) {
-            return redirect()->route('login');
-        }
-
-        $addressData = $request->only(['postal_code', 'address', 'building_name']);
+        $addressData = $request->validated();
 
         $address = Address::updateOrCreate(
             ['user_id' => $userId],
@@ -119,10 +116,6 @@ class UserController extends Controller
     public function profile(Request $request)
     {
         $user = Auth::user();
-
-        if (!$user) {
-            return redirect()->route('login');
-        }
 
         $currentTab = $request->query('tab', 'selling');
 

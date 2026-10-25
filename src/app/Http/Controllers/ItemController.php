@@ -122,9 +122,7 @@ class ItemController extends Controller
     {
         $userId = Auth::id();
 
-        if (!$userId) {
-            return view('auth.login');
-        }
+        Item::findOrFail($itemId);
 
         $like = Like::where('item_id', $itemId)->where('user_id', $userId)->first();
 
@@ -144,9 +142,7 @@ class ItemController extends Controller
     {
         $userId = Auth::id();
 
-        if (!$userId) {
-            return redirect('/login');
-        }
+        Item::findOrFail($itemId);
 
         $content = $request->input('content');
 
@@ -161,10 +157,6 @@ class ItemController extends Controller
 
     public function showSell(Request $request)
     {
-        if (!Auth::check()) {
-            return redirect()->route('login');
-        }
-
         $categories = Category::all();
 
         return view('sell', compact('categories'));

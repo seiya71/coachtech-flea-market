@@ -59,11 +59,17 @@
                 <h2 class="item-description__title">商品名と説明</h2>
                 <div class="form-group">
                     <label class="description-label" for="item-name">商品名</label>
-                    <input class="description-input" type="text" id="item-name" name="item_name" required>
+                    <input class="description-input" type="text" id="item-name" name="item_name" maxlength="255" required>
+                    @error('item_name')
+                        <p>{{ $message }}</p>
+                    @enderror
                 </div>
                 <div class="form-group">
                     <label class="description-label" for="brand">ブランド</label>
-                    <input class="description-input" type="text" id="brand" name="brand" required>
+                    <input class="description-input" type="text" id="brand" name="brand" maxlength="255" required>
+                    @error('brand')
+                        <p>{{ $message }}</p>
+                    @enderror
                 </div>
                 <div class="form-group">
                     <label class="description-label" for="description">商品の説明</label>

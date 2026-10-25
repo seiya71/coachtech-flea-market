@@ -12,16 +12,25 @@
             <label class="address-form__label" for="postal_code">郵便番号</label>
             <input class="address-form__input" type="text" name="postal_code"
                 value="{{ old('postal_code', $defaultAddress['postal_code'] ?? '') }}" required>
+            @error('postal_code')
+                <p>{{ $message }}</p>
+            @enderror
         </div>
         <div class="address-form__group">
             <label class="address-form__label" for="address">住所</label>
             <input class="address-form__input" type="text" name="address"
                 value="{{ old('address', $defaultAddress['address'] ?? '') }}" required>
+            @error('address')
+                <p>{{ $message }}</p>
+            @enderror
         </div>
         <div class="address-form__group">
             <label class="address-form__label" for="building_name">建物名</label>
             <input class="address-form__input" type="text" name="building_name"
                 value="{{ old('building_name', $defaultAddress['building_name'] ?? '') }}">
+            @error('building_name')
+                <p>{{ $message }}</p>
+            @enderror
         </div>
         <button class="address-button" type="submit">更新する</button>
     </form>
