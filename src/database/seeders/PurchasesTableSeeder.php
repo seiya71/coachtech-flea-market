@@ -43,7 +43,9 @@ class PurchasesTableSeeder extends Seeder
             \App\Models\Purchase::create([
                 'user_id' => $userId,
                 'item_id' => $itemId,
-                'address_id' => $address->id,
+                'shipping_postal_code' => $address->postal_code,
+                'shipping_address' => $address->address,
+                'shipping_building_name' => $address->building_name,
                 'created_at' => now(),
                 'updated_at' => now(),
             ]);

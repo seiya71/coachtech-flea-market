@@ -26,19 +26,7 @@ class PurchaseController extends Controller
             return redirect()->route('items.show', $item->id)->with('error', $error);
         }
 
-        $address = session('shipping_address', null);
-
-        if (!$address) {
-            $address = Address::where('user_id', $userId)->latest()->first();
-        }
-
-        if (!$address) {
-            $address = new Address([
-                'postal_code' => $user->postal_code,
-                'address' => $user->address,
-                'building_name' => $user->building_name,
-            ]);
-        }
+        $address = $this->shippingAddress($user);
 
         $paymentMethod = $request->input('payment_method', '');
         $paymentMethods = $this->paymentMethods($item);
@@ -69,7 +57,12 @@ class PurchaseController extends Controller
         }
 
         try {
-            $url = $stripe->createSession($item, Auth::user(), $request->input('payment_method'));
+            $url = $stripe->createSession(
+                $item,
+                Auth::user(),
+                $request->input('payment_method'),
+                $this->shippingAddress(Auth::user())
+            );
         } catch (ApiErrorException $e) {
             report($e);
 
@@ -115,6 +108,28 @@ class PurchaseController extends Controller
         return view('checkout.success', [
             'isPending' => $result === PurchaseService::RESULT_PENDING,
         ]);
+    }
+
+    /**
+     * 配送先（住所変更画面で変更した住所 → 登録済みの住所 → プロフィールの住所 の順に使う）
+     */
+    private function shippingAddress(User $user)
+    {
+        $address = session('shipping_address', null);
+
+        if (!$address) {
+            $address = Address::where('user_id', $user->id)->latest()->first();
+        }
+
+        if (!$address) {
+            $address = new Address([
+                'postal_code' => $user->postal_code,
+                'address' => $user->address,
+                'building_name' => $user->building_name,
+            ]);
+        }
+
+        return $address;
     }
 
     /**
