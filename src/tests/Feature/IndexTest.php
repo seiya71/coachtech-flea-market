@@ -57,4 +57,12 @@ class IndexTest extends TestCase
 
         $response->assertDontSee($item->item_name);
     }
+
+    /** @test */
+    public function ページのタイトルにアプリ名が表示される()
+    {
+        $response = $this->get('/?tab=all');
+
+        $response->assertSee('<title>COACHTECHフリマ</title>', false);
+    }
 }
