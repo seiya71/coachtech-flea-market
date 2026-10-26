@@ -34,10 +34,10 @@ jobs:
     steps:
       - uses: actions/checkout@v4
 
-      # 開発環境（docker/php/Dockerfile）と同じ PHP 7.4 を使う
+      # 開発環境（docker/php/Dockerfile）と同じ PHP 8.1 を使う
       - uses: shivammathur/setup-php@v2
         with:
-          php-version: '7.4'
+          php-version: '8.1'
           extensions: pdo_mysql, zip, gd
           coverage: none
 
