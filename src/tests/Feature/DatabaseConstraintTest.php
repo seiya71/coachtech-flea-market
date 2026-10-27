@@ -10,12 +10,13 @@ use App\Models\Item;
 use App\Models\Address;
 use App\Models\Category;
 use App\Models\Purchase;
+use PHPUnit\Framework\Attributes\Test;
 
 class DatabaseConstraintTest extends TestCase
 {
     use RefreshDatabase;
 
-    /** @test */
+    #[Test]
     public function 同じ商品の購入は二重に登録できない()
     {
         $item = Item::factory()->create();
@@ -25,7 +26,7 @@ class DatabaseConstraintTest extends TestCase
         Purchase::factory()->create(['item_id' => $item->id]);
     }
 
-    /** @test */
+    #[Test]
     public function 住所は1人1件までしか登録できない()
     {
         $user = User::factory()->create();
@@ -35,7 +36,7 @@ class DatabaseConstraintTest extends TestCase
         Address::factory()->create(['user_id' => $user->id]);
     }
 
-    /** @test */
+    #[Test]
     public function 同じ商品に同じカテゴリは二重に登録できない()
     {
         $item = Item::factory()->create();
@@ -46,7 +47,7 @@ class DatabaseConstraintTest extends TestCase
         $item->categories()->attach($category->id);
     }
 
-    /** @test */
+    #[Test]
     public function 出品時に同じカテゴリが重複して送られても1回だけ登録される()
     {
         $this->actingAs(User::factory()->create())
@@ -65,7 +66,7 @@ class DatabaseConstraintTest extends TestCase
         $this->assertDatabaseCount('item_category', 1);
     }
 
-    /** @test */
+    #[Test]
     public function 住所を何度変更しても1件のまま更新される()
     {
         $user = User::factory()->create();

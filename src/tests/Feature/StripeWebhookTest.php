@@ -8,6 +8,7 @@ use App\Models\User;
 use App\Models\Item;
 use App\Models\Purchase;
 use App\Services\StripeCheckoutService;
+use PHPUnit\Framework\Attributes\Test;
 
 class StripeWebhookTest extends TestCase
 {
@@ -62,7 +63,7 @@ class StripeWebhookTest extends TestCase
         ], $payload);
     }
 
-    /** @test */
+    #[Test]
     public function 署名が正しくない通知は受け付けない()
     {
         $user = User::factory()->create();
@@ -75,7 +76,7 @@ class StripeWebhookTest extends TestCase
         $this->assertFalse($item->fresh()->sold);
     }
 
-    /** @test */
+    #[Test]
     public function このアプリ以外の決済の通知は無視して200を返す()
     {
         $payload = json_encode([
@@ -101,7 +102,7 @@ class StripeWebhookTest extends TestCase
         $this->assertDatabaseCount('purchases', 0);
     }
 
-    /** @test */
+    #[Test]
     public function 削除された商品の決済の通知は無視して200を返す()
     {
         $user = User::factory()->create();
@@ -113,7 +114,7 @@ class StripeWebhookTest extends TestCase
         $this->assertDatabaseCount('purchases', 0);
     }
 
-    /** @test */
+    #[Test]
     public function 完了画面を開かなくてもカード払いの購入が記録される()
     {
         $user = User::factory()->create();
@@ -133,7 +134,7 @@ class StripeWebhookTest extends TestCase
         $this->assertTrue($item->fresh()->sold);
     }
 
-    /** @test */
+    #[Test]
     public function 同じ通知が2回届いても二重に購入されない()
     {
         $user = User::factory()->create();
@@ -145,7 +146,7 @@ class StripeWebhookTest extends TestCase
         $this->assertSame(1, Purchase::where('item_id', $item->id)->count());
     }
 
-    /** @test */
+    #[Test]
     public function コンビニ払いは支払いが完了したら購入済みになる()
     {
         $user = User::factory()->create();
@@ -162,7 +163,7 @@ class StripeWebhookTest extends TestCase
         $this->assertSame(1, Purchase::where('item_id', $item->id)->count());
     }
 
-    /** @test */
+    #[Test]
     public function コンビニ払いの支払い期限が切れたら商品が販売中に戻る()
     {
         $user = User::factory()->create();
@@ -175,7 +176,7 @@ class StripeWebhookTest extends TestCase
         $this->assertFalse($item->fresh()->sold);
     }
 
-    /** @test */
+    #[Test]
     public function 支払い済みの購入は期限切れの通知では取り消されない()
     {
         $user = User::factory()->create();
@@ -188,7 +189,7 @@ class StripeWebhookTest extends TestCase
         $this->assertTrue($item->fresh()->sold);
     }
 
-    /** @test */
+    #[Test]
     public function 他の人が先に購入していた商品の支払いは返金される()
     {
         $user = User::factory()->create();
@@ -202,7 +203,7 @@ class StripeWebhookTest extends TestCase
         $this->assertDatabaseMissing('purchases', ['stripe_session_id' => 'cs_test']);
     }
 
-    /** @test */
+    #[Test]
     public function 支払い待ちの決済が他の人に先を越された場合は返金しない()
     {
         $user = User::factory()->create();

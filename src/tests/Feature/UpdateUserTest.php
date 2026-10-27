@@ -6,12 +6,13 @@ use Illuminate\Foundation\Testing\RefreshDatabase;
 use Illuminate\Foundation\Testing\WithFaker;
 use Tests\TestCase;
 use App\Models\User;
+use PHPUnit\Framework\Attributes\Test;
 
 class UpdateUserTest extends TestCase
 {
     use RefreshDatabase;
 
-    /** @test */
+    #[Test]
     public function ユーザー情報の変更ができる()
     {
         $user = User::factory()->create([

@@ -10,12 +10,13 @@ use App\Models\Item;
 use App\Models\Category;
 use App\Models\Like;
 use App\Models\Comment;
+use PHPUnit\Framework\Attributes\Test;
 
 class LikeTest extends TestCase
 {
     use RefreshDatabase;
 
-    /** @test */
+    #[Test]
     public function 商品にいいねが出来てカウントも増える()
     {
         $user = User::factory()->create();
@@ -38,7 +39,7 @@ class LikeTest extends TestCase
         $this->assertEquals(1, $item->likes()->count());
     }
 
-    /** @test */
+    #[Test]
     public function いいねしたら表示がアイコンの表示が変わる()
     {
         $user = User::factory()->create();
@@ -60,7 +61,7 @@ class LikeTest extends TestCase
         $response->assertDontSee('/images/icons/star.png');
     }
 
-    /** @test */
+    #[Test]
     public function いいねはも一回押したら減る()
     {
         $user = User::factory()->create();

@@ -12,6 +12,7 @@ use App\Models\Item;
 use App\Models\Like;
 use App\Services\StripeCheckoutService;
 use Stripe\Exception\InvalidRequestException;
+use PHPUnit\Framework\Attributes\Test;
 
 class InputValidationTest extends TestCase
 {
@@ -28,7 +29,7 @@ class InputValidationTest extends TestCase
         ], $overrides);
     }
 
-    /** @test */
+    #[Test]
     public function 販売価格は50円以上9999999円以下でないと出品できない()
     {
         $this->actingAs(User::factory()->create())
@@ -46,7 +47,7 @@ class InputValidationTest extends TestCase
         $this->assertDatabaseHas('items', ['price' => 50]);
     }
 
-    /** @test */
+    #[Test]
     public function コンビニ払いは120円から300000円の商品でしか選べない()
     {
         $this->actingAs(User::factory()->create());
@@ -69,7 +70,7 @@ class InputValidationTest extends TestCase
         $this->get(route('purchase', ['itemId' => $item->id]))->assertSee('コンビニ払い');
     }
 
-    /** @test */
+    #[Test]
     public function Stripeでエラーが起きたら購入画面に戻ってメッセージを表示する()
     {
         $this->actingAs(User::factory()->create());
@@ -84,7 +85,7 @@ class InputValidationTest extends TestCase
             ->assertSessionHas('error', '決済画面を開けませんでした。時間をおいてもう一度お試しください。');
     }
 
-    /** @test */
+    #[Test]
     public function 出品時にフォームで送った画像のパスは使われない()
     {
         Storage::fake('public');
@@ -101,7 +102,7 @@ class InputValidationTest extends TestCase
         $this->assertDatabaseMissing('items', ['item_image' => 'profile_images/someone.png']);
     }
 
-    /** @test */
+    #[Test]
     public function 画像をアップロードしていなければフォームで画像のパスを送っても出品できない()
     {
         $this->actingAs(User::factory()->create());
@@ -112,7 +113,7 @@ class InputValidationTest extends TestCase
         $this->assertDatabaseCount('items', 0);
     }
 
-    /** @test */
+    #[Test]
     public function プロフィール更新時にフォームで送った画像のパスは使われない()
     {
         $user = User::factory()->create(['profile_image' => 'profile_images/mine.png']);
@@ -129,7 +130,7 @@ class InputValidationTest extends TestCase
         $this->assertSame('profile_images/mine.png', $user->fresh()->profile_image);
     }
 
-    /** @test */
+    #[Test]
     public function 同じ商品へのいいねは二重に登録できない()
     {
         $user = User::factory()->create();

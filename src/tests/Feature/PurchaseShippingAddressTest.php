@@ -11,6 +11,7 @@ use App\Models\Address;
 use App\Models\Purchase;
 use App\Services\StripeCheckoutService;
 use Stripe\Checkout\Session;
+use PHPUnit\Framework\Attributes\Test;
 
 class PurchaseShippingAddressTest extends TestCase
 {
@@ -29,7 +30,7 @@ class PurchaseShippingAddressTest extends TestCase
         ]);
     }
 
-    /** @test */
+    #[Test]
     public function 決済画面を作るときに住所変更画面で変更した配送先がStripeに渡される()
     {
         $user = User::factory()->create();
@@ -58,7 +59,7 @@ class PurchaseShippingAddressTest extends TestCase
             ->assertRedirect('https://checkout.stripe.com/test');
     }
 
-    /** @test */
+    #[Test]
     public function 住所を変更しても過去の購入の配送先は変わらない()
     {
         $user = User::factory()->create();
@@ -88,7 +89,7 @@ class PurchaseShippingAddressTest extends TestCase
         $this->assertSame('購入時の建物', $purchase->shipping_building_name);
     }
 
-    /** @test */
+    #[Test]
     public function 住所変更画面の初期値に登録済みの住所とプロフィールの住所が混ざらない()
     {
         $user = User::factory()->create(['building_name' => 'プロフィールの建物']);
@@ -105,7 +106,7 @@ class PurchaseShippingAddressTest extends TestCase
             ->assertDontSee('プロフィールの建物');
     }
 
-    /** @test */
+    #[Test]
     public function 配送先を保存する前に作られた決済は今の住所で記録される()
     {
         $user = User::factory()->create();

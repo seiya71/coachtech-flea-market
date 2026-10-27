@@ -8,12 +8,13 @@ use Tests\TestCase;
 use App\Models\User;
 use Illuminate\Auth\Events\Registered;
 use Illuminate\Support\Facades\Event;
+use PHPUnit\Framework\Attributes\Test;
 
 class RegisterTest extends TestCase
 {
     use RefreshDatabase;
 
-    /** @test */
+    #[Test]
     public function 名前が未入力の場合はエラーメッセージが表示される()
     {
         $response = $this->post('/register', [
@@ -28,7 +29,7 @@ class RegisterTest extends TestCase
         ]);
     }
 
-    /** @test */
+    #[Test]
     public function メールアドレスが未入力の場合はエラーメッセージが表示される()
     {
         $response = $this->post('/register', [
@@ -43,7 +44,7 @@ class RegisterTest extends TestCase
         ]);
     }
 
-    /** @test */
+    #[Test]
     public function パスワードが未入力の場合はエラーメッセージが表示される()
     {
         $response = $this->post('/register', [
@@ -58,7 +59,7 @@ class RegisterTest extends TestCase
         ]);
     }
 
-    /** @test */
+    #[Test]
     public function パスワードが7文字以下の場合はエラーメッセージが表示される()
     {
         $response = $this->post('/register', [
@@ -73,7 +74,7 @@ class RegisterTest extends TestCase
         ]);
     }
 
-    /** @test */
+    #[Test]
     public function 確認用パスワードが一致しない場合はエラーメッセージが表示される()
     {
         $response = $this->post('/register', [
@@ -88,7 +89,7 @@ class RegisterTest extends TestCase
         ]);
     }
 
-    /** @test */
+    #[Test]
     public function 正常に登録できるとメール確認画面へ遷移する()
     {
         Event::fake();

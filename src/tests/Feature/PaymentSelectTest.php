@@ -7,12 +7,13 @@ use Illuminate\Foundation\Testing\WithFaker;
 use Tests\TestCase;
 use App\Models\User;
 use App\Models\Item;
+use PHPUnit\Framework\Attributes\Test;
 
 class PaymentSelectTest extends TestCase
 {
     use RefreshDatabase;
 
-    /** @test */
+    #[Test]
     public function 支払い方法を選択したら小計表示も変更される()
     {
         $user = User::factory()->create();

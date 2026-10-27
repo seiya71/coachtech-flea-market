@@ -10,12 +10,13 @@ use App\Models\Item;
 use App\Models\Address;
 use App\Models\Category;
 use App\Models\ItemCategory;
+use PHPUnit\Framework\Attributes\Test;
 
 class AddressTest extends TestCase
 {
     use RefreshDatabase;
 
-    /** @test */
+    #[Test]
     public function 送付先住所変更画面にて登録した住所が商品購入画面に反映されている()
     {
         $user = User::factory()->create();

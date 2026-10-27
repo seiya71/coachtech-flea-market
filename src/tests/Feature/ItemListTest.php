@@ -12,12 +12,13 @@ use App\Models\Like;
 use App\Models\Comment;
 use Illuminate\Support\Facades\DB;
 use Database\Factories\CategoryFactory;
+use PHPUnit\Framework\Attributes\Test;
 
 class ItemListTest extends TestCase
 {
     use RefreshDatabase;
 
-    /** @test */
+    #[Test]
     public function 商品詳細情報が正しく表示される()
     {
         $category = Category::create([
@@ -63,7 +64,7 @@ class ItemListTest extends TestCase
 
     }
 
-    /** @test */
+    #[Test]
     public function 複数のカテゴリーが表示される()
     {
         $item = Item::factory()->create();

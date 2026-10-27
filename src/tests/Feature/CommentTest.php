@@ -8,12 +8,13 @@ use Tests\TestCase;
 use App\Models\User;
 use App\Models\Item;
 use App\Models\Comment;
+use PHPUnit\Framework\Attributes\Test;
 
 class CommentTest extends TestCase
 {
     use RefreshDatabase;
 
-    /** @test */
+    #[Test]
     public function コメントができる()
     {
         $user = User::factory()->create();
@@ -40,8 +41,7 @@ class CommentTest extends TestCase
         $this->assertEquals(1, $item->comments()->count());
     }
 
-    /** @test */
-    /** @test */
+    #[Test]
     public function 未ログインでコメントができない()
     {
         $user = User::factory()->create();
@@ -61,7 +61,7 @@ class CommentTest extends TestCase
     }
 
 
-    /** @test */
+    #[Test]
     public function コメントを入力しないとエラーメッセージがでる()
     {
         $user = User::factory()->create();
@@ -76,7 +76,7 @@ class CommentTest extends TestCase
         $response->assertSessionHasErrors(['content' => 'コメントを入力してください']);
     }
 
-    /** @test */
+    #[Test]
     public function コメントの文字数が多いとエラーメッセージがでる()
     {
         $user = User::factory()->create();

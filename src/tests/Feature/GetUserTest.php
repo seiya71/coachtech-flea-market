@@ -10,12 +10,13 @@ use App\Models\Item;
 use App\Models\Product;
 use App\Models\Purchase;
 use Illuminate\Support\Facades\Hash;
+use PHPUnit\Framework\Attributes\Test;
 
 class GetUserTest extends TestCase
 {
     use RefreshDatabase;
 
-    /** @test */
+    #[Test]
     public function ユーザーの情報を見ることができる()
     {
         $user = User::factory()->create();

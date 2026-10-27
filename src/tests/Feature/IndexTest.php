@@ -8,12 +8,13 @@ use Tests\TestCase;
 use App\Models\User;
 use App\Models\Item;
 use Illuminate\Support\Facades\Auth;
+use PHPUnit\Framework\Attributes\Test;
 
 class IndexTest extends TestCase
 {
     use RefreshDatabase;
 
-    /** @test */
+    #[Test]
     public function 商品一覧ページで全商品が表示される()
     {
         Item::factory()->count(10)->create();
@@ -26,7 +27,7 @@ class IndexTest extends TestCase
         $this->assertCount(10, $items->items());
     }
 
-    /** @test */
+    #[Test]
     public function 売れた商品がsoldとして表示される()
     {
         Item::factory()->create([
@@ -40,7 +41,7 @@ class IndexTest extends TestCase
         $response->assertSee('Sold');
     }
 
-    /** @test */
+    #[Test]
     public function ログインユーザーが出品したアイテムは全件取得タブで表示されない()
     {
         $user = User::factory()->create();
@@ -58,7 +59,7 @@ class IndexTest extends TestCase
         $response->assertDontSee($item->item_name);
     }
 
-    /** @test */
+    #[Test]
     public function ページのタイトルにアプリ名が表示される()
     {
         $response = $this->get('/?tab=all');
