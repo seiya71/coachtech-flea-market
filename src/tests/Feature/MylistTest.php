@@ -9,12 +9,13 @@ use Tests\TestCase;
 use App\Models\User;
 use App\Models\Item;
 use App\Models\Like;
+use PHPUnit\Framework\Attributes\Test;
 
 class MylistTest extends TestCase
 {
     use RefreshDatabase;
 
-    /** @test */
+    #[Test]
     public function ログインユーザーがいいねした商品はマイリストに表示される()
     {
         $user = User::factory()->create();
@@ -35,7 +36,7 @@ class MylistTest extends TestCase
         $response->assertSee($item->item_name);
     }
 
-    /** @test */
+    #[Test]
     public function マイリストに表示された売れた商品はsoldとして表示される()
     {
         $user = User::factory()->create();
@@ -73,7 +74,7 @@ class MylistTest extends TestCase
             ->assertSee('現在マイリストはありません。');
     }
 
-    /** @test */
+    #[Test]
     public function 未ログイン状態でマイリストを開くと商品が表示されない()
     {
         $response = $this->get('/?tab=mylist');

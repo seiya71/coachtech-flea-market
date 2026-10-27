@@ -8,12 +8,13 @@ use Illuminate\Auth\Notifications\VerifyEmail;
 use Tests\TestCase;
 use App\Models\User;
 use App\Models\Item;
+use PHPUnit\Framework\Attributes\Test;
 
 class AuthSecurityTest extends TestCase
 {
     use RefreshDatabase;
 
-    /** @test */
+    #[Test]
     public function メール認証が済んでいない人はログインしたまま認証画面に移動し確認メールを再送できる()
     {
         Notification::fake();
@@ -37,7 +38,7 @@ class AuthSecurityTest extends TestCase
         Notification::assertSentTo($user, VerifyEmail::class);
     }
 
-    /** @test */
+    #[Test]
     public function ログインに5回失敗すると正しいパスワードでもしばらくログインできない()
     {
         $user = User::factory()->create([
@@ -59,7 +60,7 @@ class AuthSecurityTest extends TestCase
         $this->assertGuest();
     }
 
-    /** @test */
+    #[Test]
     public function ログインに成功すると失敗の回数がリセットされる()
     {
         User::factory()->create([
@@ -79,7 +80,7 @@ class AuthSecurityTest extends TestCase
         $this->post('/login', ['email' => 'test@example.com', 'password' => 'password123'])->assertRedirect('/');
     }
 
-    /** @test */
+    #[Test]
     public function 登録されていないメールアドレスとパスワード間違いで同じメッセージが表示される()
     {
         User::factory()->create([
@@ -94,7 +95,7 @@ class AuthSecurityTest extends TestCase
             ->assertSessionHasErrors(['email' => 'ログイン情報が登録されていません']);
     }
 
-    /** @test */
+    #[Test]
     public function メール認証が済んでいない人は出品やいいねなどができない()
     {
         $user = User::factory()->create(['email_verified_at' => null]);

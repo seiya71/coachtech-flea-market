@@ -8,12 +8,13 @@ use Illuminate\Auth\Notifications\VerifyEmail;
 use Tests\TestCase;
 use App\Models\User;
 use App\Models\Item;
+use PHPUnit\Framework\Attributes\Test;
 
 class ServerErrorTest extends TestCase
 {
     use RefreshDatabase;
 
-    /** @test */
+    #[Test]
     public function 確認メールを再送できる()
     {
         Notification::fake();
@@ -28,7 +29,7 @@ class ServerErrorTest extends TestCase
         Notification::assertSentTo($user, VerifyEmail::class);
     }
 
-    /** @test */
+    #[Test]
     public function 未ログインでログインが必要なページを開くとログイン画面に移動する()
     {
         $item = Item::factory()->create();
@@ -42,7 +43,7 @@ class ServerErrorTest extends TestCase
         $this->post(route('addlike', $item->id))->assertRedirect('/login');
     }
 
-    /** @test */
+    #[Test]
     public function 住所変更で郵便番号と住所が空だとエラーになる()
     {
         $user = User::factory()->create();
@@ -62,7 +63,7 @@ class ServerErrorTest extends TestCase
         $this->assertDatabaseMissing('addresses', ['user_id' => $user->id]);
     }
 
-    /** @test */
+    #[Test]
     public function 住所変更で建物名は空でもよい()
     {
         $user = User::factory()->create();
@@ -83,7 +84,7 @@ class ServerErrorTest extends TestCase
         ]);
     }
 
-    /** @test */
+    #[Test]
     public function 商品名とブランド名が255文字を超えるとエラーになる()
     {
         $user = User::factory()->create();
@@ -105,7 +106,7 @@ class ServerErrorTest extends TestCase
         $this->assertDatabaseCount('items', 0);
     }
 
-    /** @test */
+    #[Test]
     public function 存在しない商品へのいいねとコメントは404になる()
     {
         $user = User::factory()->create();

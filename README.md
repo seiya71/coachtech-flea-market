@@ -192,8 +192,8 @@ GitHub に push したときと PR を出したときにも、GitHub Actions で
 ## 使用技術（実行環境）
 * nginx 1.21.1
 * mysql 8.0.26
-* php 8.1-fpm
-* Laravel Framework 10.50.3
+* php 8.4-fpm
+* Laravel Framework 11.57.0
 * Fortify
 * Storage
 * Stripe

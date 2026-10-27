@@ -27,10 +27,10 @@ class ItemController extends Controller
             return $userController->showEdit($request);
         }
 
-        $tab = $request->get('tab', session('current_tab', Auth::check() ? 'mylist' : 'all'));
+        $tab = $request->input('tab', session('current_tab', Auth::check() ? 'mylist' : 'all'));
         session(['current_tab' => $tab]);
 
-        $query = $request->get('search', session('search_query', ''));
+        $query = $request->input('search', session('search_query', ''));
         session(['search_query' => $query]);
 
         $items = collect();

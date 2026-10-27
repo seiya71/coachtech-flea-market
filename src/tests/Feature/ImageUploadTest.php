@@ -8,6 +8,7 @@ use Illuminate\Support\Facades\Storage;
 use Tests\TestCase;
 use App\Models\User;
 use App\Models\Item;
+use PHPUnit\Framework\Attributes\Test;
 
 class ImageUploadTest extends TestCase
 {
@@ -20,7 +21,7 @@ class ImageUploadTest extends TestCase
         Storage::fake('public');
     }
 
-    /** @test */
+    #[Test]
     public function ログインしていないと商品画像をアップロードできない()
     {
         $response = $this->post('/upload-item-image', [
@@ -31,7 +32,7 @@ class ImageUploadTest extends TestCase
         $this->assertEmpty(Storage::disk('public')->allFiles());
     }
 
-    /** @test */
+    #[Test]
     public function 画像以外のファイルは商品画像としてアップロードできない()
     {
         $user = User::factory()->create();
@@ -44,7 +45,7 @@ class ImageUploadTest extends TestCase
         $this->assertEmpty(Storage::disk('public')->allFiles());
     }
 
-    /** @test */
+    #[Test]
     public function 商品画像は2MBを超えるとアップロードできない()
     {
         $user = User::factory()->create();
@@ -57,7 +58,7 @@ class ImageUploadTest extends TestCase
         $this->assertEmpty(Storage::disk('public')->allFiles());
     }
 
-    /** @test */
+    #[Test]
     public function jpeg形式の商品画像をアップロードできる()
     {
         $user = User::factory()->create();
@@ -70,7 +71,7 @@ class ImageUploadTest extends TestCase
         Storage::disk('public')->assertExists($response->json()['item_image']);
     }
 
-    /** @test */
+    #[Test]
     public function ログインしていないとプロフィール画像をアップロードできない()
     {
         $response = $this->post('/profile_edit/image', [
@@ -81,7 +82,7 @@ class ImageUploadTest extends TestCase
         $this->assertEmpty(Storage::disk('public')->allFiles());
     }
 
-    /** @test */
+    #[Test]
     public function 画像以外のファイルはプロフィール画像としてアップロードできない()
     {
         $user = User::factory()->create();
@@ -94,7 +95,7 @@ class ImageUploadTest extends TestCase
         $this->assertEmpty(Storage::disk('public')->allFiles());
     }
 
-    /** @test */
+    #[Test]
     public function プロフィール画像をアップロードできる()
     {
         $user = User::factory()->create();
@@ -108,7 +109,7 @@ class ImageUploadTest extends TestCase
         Storage::disk('public')->assertExists(session('profile_image'));
     }
 
-    /** @test */
+    #[Test]
     public function 商品画像を選び直すと前に選んでいた画像は削除される()
     {
         $this->actingAs(User::factory()->create());
@@ -125,7 +126,7 @@ class ImageUploadTest extends TestCase
         Storage::disk('public')->assertExists($second);
     }
 
-    /** @test */
+    #[Test]
     public function 前に選んでいた画像が商品に使われていれば削除しない()
     {
         $this->actingAs(User::factory()->create());
@@ -143,7 +144,7 @@ class ImageUploadTest extends TestCase
         Storage::disk('public')->assertExists($first);
     }
 
-    /** @test */
+    #[Test]
     public function プロフィール画像を選び直すと前に選んでいた画像は削除される()
     {
         $this->actingAs(User::factory()->create());

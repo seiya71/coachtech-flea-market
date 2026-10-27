@@ -9,13 +9,14 @@ use Illuminate\Support\Facades\Hash;
 use App\Models\User;
 use Illuminate\Support\Facades\Log;
 use Illuminate\Foundation\Testing\WithoutMiddleware;
+use PHPUnit\Framework\Attributes\Test;
 
 
 class LoginTest extends TestCase
 {
     use RefreshDatabase;
 
-    /** @test */
+    #[Test]
     public function メールアドレスが未入力の場合はエラーメッセージが表示される()
     {
         User::factory()->create([
@@ -33,7 +34,7 @@ class LoginTest extends TestCase
         ]);
     }
 
-    /** @test */
+    #[Test]
     public function パスワードが未入力の場合はエラーメッセージが表示される()
     {
         User::factory()->create([
@@ -51,7 +52,7 @@ class LoginTest extends TestCase
         ]);
     }
 
-    /** @test */
+    #[Test]
     public function 間違ったメールアドレスやパスワードの場合はエラーメッセージが表示される()
     {
         User::factory()->create([
@@ -69,7 +70,7 @@ class LoginTest extends TestCase
         ]);
     }
 
-    /** @test */
+    #[Test]
     public function 正しいメールアドレスとパスワードでログインすると_ホームページにリダイレクトされる()
     {
         $user = User::factory()->create([

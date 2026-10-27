@@ -8,12 +8,13 @@ use Tests\TestCase;
 use App\Models\User;
 use App\Models\Item;
 use App\Models\Like;
+use PHPUnit\Framework\Attributes\Test;
 
 class SearchTest extends TestCase
 {
     use RefreshDatabase;
 
-    /** @test */
+    #[Test]
     public function 商品名で部分一致検索ができる()
     {
         $item = Item::factory()->create([
@@ -26,7 +27,7 @@ class SearchTest extends TestCase
             ->assertSee('アイテムボックス');
     }
 
-    /** @test */
+    #[Test]
     public function 検索状態がマイリストでも保持される()
     {
         $user = User::factory()->create();

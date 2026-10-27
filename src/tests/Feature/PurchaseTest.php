@@ -11,6 +11,7 @@ use App\Models\Category;
 use App\Models\Purchase;
 use App\Services\StripeCheckoutService;
 use Stripe\Checkout\Session;
+use PHPUnit\Framework\Attributes\Test;
 
 class PurchaseTest extends TestCase
 {
@@ -61,7 +62,7 @@ class PurchaseTest extends TestCase
         return $this->get(route('checkout.success', ['session_id' => 'test_session_id']));
     }
 
-    /** @test */
+    #[Test]
     public function 購入できる()
     {
         $user = User::factory()->create();
@@ -81,7 +82,7 @@ class PurchaseTest extends TestCase
         ]);
     }
 
-    /** @test */
+    #[Test]
     public function 購入したらSoldと表示される()
     {
         $user = User::factory()->create();
@@ -97,7 +98,7 @@ class PurchaseTest extends TestCase
         $response->assertSee('Sold');
     }
 
-    /** @test */
+    #[Test]
     public function 購入した商品プロフィールに表示される()
     {
         $user = User::factory()->create();
@@ -112,7 +113,7 @@ class PurchaseTest extends TestCase
         $response->assertSee($item->item_name);
     }
 
-    /** @test */
+    #[Test]
     public function 決済が完了していなければ購入されない()
     {
         $user = User::factory()->create();
@@ -126,7 +127,7 @@ class PurchaseTest extends TestCase
         $this->assertFalse($item->fresh()->sold);
     }
 
-    /** @test */
+    #[Test]
     public function session_idがなければ購入されない()
     {
         $user = User::factory()->create();
@@ -140,7 +141,7 @@ class PurchaseTest extends TestCase
         $this->assertDatabaseMissing('purchases', ['item_id' => $item->id]);
     }
 
-    /** @test */
+    #[Test]
     public function 他人の決済情報では購入されない()
     {
         $user = User::factory()->create();
@@ -155,7 +156,7 @@ class PurchaseTest extends TestCase
         $this->assertDatabaseMissing('purchases', ['item_id' => $item->id]);
     }
 
-    /** @test */
+    #[Test]
     public function 完了画面を再読み込みしても二重に購入されない()
     {
         $user = User::factory()->create();
@@ -169,7 +170,7 @@ class PurchaseTest extends TestCase
         $this->assertSame(1, Purchase::where('item_id', $item->id)->count());
     }
 
-    /** @test */
+    #[Test]
     public function コンビニ払いは支払い待ちとして商品が確保される()
     {
         $user = User::factory()->create();
@@ -191,7 +192,7 @@ class PurchaseTest extends TestCase
         $this->get(route('profile', ['tab' => 'purchased']))->assertSee('支払い待ち');
     }
 
-    /** @test */
+    #[Test]
     public function 他の人が先に購入していた場合は返金される()
     {
         $user = User::factory()->create();
@@ -215,7 +216,7 @@ class PurchaseTest extends TestCase
         $this->assertDatabaseMissing('purchases', ['stripe_session_id' => 'test_session_id']);
     }
 
-    /** @test */
+    #[Test]
     public function 決済画面ではURLの商品が購入対象になる()
     {
         $user = User::factory()->create();
@@ -236,7 +237,7 @@ class PurchaseTest extends TestCase
             ->assertRedirect('https://checkout.stripe.com/test');
     }
 
-    /** @test */
+    #[Test]
     public function 売り切れの商品は購入できない()
     {
         $user = User::factory()->create();
@@ -251,7 +252,7 @@ class PurchaseTest extends TestCase
             ->assertRedirect(route('items.show', $item->id));
     }
 
-    /** @test */
+    #[Test]
     public function 自分が出品した商品は購入できない()
     {
         $user = User::factory()->create();
@@ -266,7 +267,7 @@ class PurchaseTest extends TestCase
             ->assertRedirect(route('items.show', $item->id));
     }
 
-    /** @test */
+    #[Test]
     public function ログインしていないと購入画面に進めない()
     {
         $item = Item::factory()->create(['sold' => false]);
