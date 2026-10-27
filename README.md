@@ -193,7 +193,7 @@ GitHub に push したときと PR を出したときにも、GitHub Actions で
 * nginx 1.21.1
 * mysql 8.0.26
 * php 8.4-fpm
-* Laravel Framework 11.57.0
+* Laravel Framework 12.70.1
 * Fortify
 * Storage
 * Stripe
