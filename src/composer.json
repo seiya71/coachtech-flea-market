@@ -8,17 +8,17 @@
         "php": "^8.2",
         "guzzlehttp/guzzle": "^7.0.1",
         "laravel/fortify": "^1.19",
-        "laravel/framework": "^11.44.1",
+        "laravel/framework": "^12.69",
         "laravel/sanctum": "^4.0",
-        "laravel/tinker": "^2.9",
+        "laravel/tinker": "^2.10.1",
         "stripe/stripe-php": "^16.5"
     },
     "require-dev": {
         "fakerphp/faker": "^1.9.1",
         "laravel/sail": "^1.0.1",
         "mockery/mockery": "^1.4.4",
-        "nunomaduro/collision": "^8.1",
-        "phpunit/phpunit": "^11.0.1",
+        "nunomaduro/collision": "^8.6",
+        "phpunit/phpunit": "^11.5.3",
         "spatie/laravel-ignition": "^2.4"
     },
     "autoload": {
@@ -56,18 +56,7 @@
     "config": {
         "optimize-autoloader": true,
         "preferred-install": "dist",
-        "sort-packages": true,
-        "policy": {
-            "advisories": {
-                "ignore-id": [
-                    "PKSA-b41t-wbzk-9q51",
-                    "PKSA-d5tc-s1qs-h781",
-                    "PKSA-m5cs-t1y6-qpcs",
-                    "PKSA-3r5d-mb8f-1qw9",
-                    "PKSA-mdq4-51ck-6kdq"
-                ]
-            }
-        }
+        "sort-packages": true
     },
     "minimum-stability": "dev",
     "prefer-stable": true
